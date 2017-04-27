@@ -1,11 +1,25 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-    </style>
+    <declare-styleable name="DayPickerView">
+        <attr name="colorCurrentDay" format="color"/>
+        <attr name="colorSelectedDayBackground" format="color"/>
+        <attr name="colorSelectedDayText" format="color"/>
+        <attr name="colorPreviousDayText" format="color"/>
+        <attr name="colorNormalDayText" format="color" />
+        <attr name="colorYearMonthText" format="color" />
+        <attr name="colorWeekText" format="color" />
+        <attr name="colorBusyDaysBg" format="color" />
+        <attr name="colorInValidDaysBg" format="color" />
+        <attr name="colorBusyDaysText" format="color" />
+        <attr name="colorInValidDaysText" format="color" />
 
+        <attr name="textSizeDay" format="dimension"/>
+        <attr name="textSizeTag" format="dimension"/>
+        <attr name="textSizeYearMonth" format="dimension" />
+        <attr name="textSizeWeek" format="dimension" />
+        <attr name="headerMonthHeight" format="dimension" />
+        <attr name="selectedDayRadius" format="dimension" />
+        <attr name="calendarHeight" format="dimension" />
+        <attr name="enablePreviousDay" format="boolean" />
+    </declare-styleable>
 </resources>
