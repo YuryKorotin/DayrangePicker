@@ -79,7 +79,6 @@ public class DayRangePickerView extends RecyclerView {
     }
 
     /**
-     * 设置参数
      *
      * @param dataModel   数据
      * @param mController 回调监听

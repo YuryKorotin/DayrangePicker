@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
+ * Adapter for list of months
  * Created by yuri on 27.04.17.
  */
 
@@ -53,7 +54,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         mController = datePickerController;
         this.dataModel = dataModel;
 
-//        // 今天是否默认选中
 //        if (typedArray.getBoolean(R.styleable.DayPickerView_currentDaySelected, false))
 //            onDayTapped(new CalendarDay(System.currentTimeMillis()));
         initData();
@@ -247,9 +247,8 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     }
 
     /**
-     * 把比离入住日期大且是最近的已被占用或者无效日期找出来
      *
-     * @param calendarDay 入住日期
+     * @param calendarDay
      * @return
      */
     protected CalendarDay getNearestDay(CalendarDay calendarDay) {
@@ -270,7 +269,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     }
 
     /**
-     * 判断选择的日期范围是否包含有特殊的日期（无效的或者已被占用的日期）
      *
      * @param first
      * @param last
@@ -289,7 +287,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     }
 
     /**
-     * 两个日期中间隔多少天
      *
      * @param first
      * @param last
@@ -301,7 +298,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     }
 
     /**
-     * 范围选择时，把选中的所有日期加进list中
      *
      * @return
      */
@@ -333,7 +329,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     }
 
     /**
-     * 设置数据集
      *
      * @param dataModel
      */
