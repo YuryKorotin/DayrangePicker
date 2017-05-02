@@ -11,7 +11,7 @@ import com.github.yurykorotin.dayrangepicker.models.CalendarDay;
 import com.github.yurykorotin.dayrangepicker.models.DaySelection;
 import com.github.yurykorotin.dayrangepicker.models.RangeModel;
 
-import java.io.Serializable;
+import java.util.Calendar;
 
 /**
  * Created by yuri on 27.04.17.
@@ -47,8 +47,6 @@ public class DayRangePickerView extends RecyclerView {
     public void init(Context paramContext) {
         setLayoutManager(new LinearLayoutManager(paramContext));
         mContext = paramContext;
-        setUpListView();
-
         onScrollListener = new OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -62,6 +60,8 @@ public class DayRangePickerView extends RecyclerView {
                 mPreviousScrollState = mCurrentScrollState;
             }
         };
+        setUpListView();
+
     }
 
     protected void setUpAdapter() {
@@ -70,18 +70,18 @@ public class DayRangePickerView extends RecyclerView {
             setAdapter(mAdapter);
         }
         mAdapter.notifyDataSetChanged();
+        scrollToCurrentMonth();
     }
 
     protected void setUpListView() {
         setVerticalScrollBarEnabled(false);
-        setOnScrollListener(onScrollListener);
+        addOnScrollListener(onScrollListener);
         setFadingEdgeLength(0);
     }
 
     /**
-     *
-     * @param dataModel   数据
-     * @param mController 回调监听
+     * @param dataModel
+     * @param mController
      */
     public void setParameter(RangeModel dataModel, DayRangePickerController mController) {
         if (dataModel == null) {
@@ -91,6 +91,7 @@ public class DayRangePickerView extends RecyclerView {
         this.mController = mController;
         setUpAdapter();
         scrollToSelectedPosition(dataModel.selectedDays, dataModel.monthStart);
+        scrollToCurrentMonth();
     }
 
     private void scrollToSelectedPosition(DaySelection<CalendarDay> selectedDays,
@@ -100,5 +101,21 @@ public class DayRangePickerView extends RecyclerView {
             int position = selectedDays.getFirst().month - monthStart;
             scrollToPosition(position);
         }
+    }
+
+    private void scrollToCurrentMonth() {
+        Calendar calendar = Calendar.getInstance();
+        int month = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR);
+
+        int position = 0;
+        int totalMonthCount = 12;
+        if (year == dataModel.yearStart) {
+            position = month - dataModel.monthStart;
+        } else {
+            position = totalMonthCount - dataModel.monthStart + month;
+        }
+
+        scrollToPosition(position);
     }
 }
