@@ -4,4 +4,6 @@
     <color name="selected_day_background">#C2185B</color>
     <color name="selected_day_text">#FFFFFF</color>
     <color name="invalid_day_background">#c0c0c0</color>
+    <color name="invalid_day_textColor">#d8d8d8</color>
+    <color name="busy_day_background">#FFE3E3</color>
 </resources>

@@ -8,12 +8,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Typeface;
-import android.os.Build;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.text.format.DateUtils;
 import android.text.format.Time;
-import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -144,30 +140,30 @@ public class MonthView extends View{
         today.setToNow();
         mDayOfWeekTypeface = resources.getString(R.string.sans_serif);
         mMonthTitleTypeface = resources.getString(R.string.sans_serif);
-        mCurrentDayTextColor = typedArray.getColor(R.styleable.DayPickerView_colorCurrentDay, resources.getColor(R.color.normal_day));
-        mYearMonthTextColor = typedArray.getColor(R.styleable.DayPickerView_colorYearMonthText, resources.getColor(R.color.normal_day));
-        mWeekTextColor = typedArray.getColor(R.styleable.DayPickerView_colorWeekText, resources.getColor(R.color.normal_day));
+        mCurrentDayTextColor = typedArray.getColor(R.styleable.DayPickerView_currentDayTextColor, resources.getColor(R.color.normal_day));
+        mYearMonthTextColor = typedArray.getColor(R.styleable.DayPickerView_yearMonthTextColor, resources.getColor(R.color.normal_day));
+        mWeekTextColor = typedArray.getColor(R.styleable.DayPickerView_weekTextColor, resources.getColor(R.color.normal_day));
 //        mDayTextColor = typedArray.getColor(R.styleable.DayPickerView_colorDayName, resources.getColor(R.color.normal_day));
-        mDayTextColor = typedArray.getColor(R.styleable.DayPickerView_colorNormalDayText, resources.getColor(R.color.normal_day));
-        mPreviousDayTextColor = typedArray.getColor(R.styleable.DayPickerView_colorPreviousDayText, resources.getColor(R.color.normal_day));
-        mSelectedDaysBgColor = typedArray.getColor(R.styleable.DayPickerView_colorSelectedDayBackground, resources.getColor(R.color.selected_day_background));
-        mSelectedDayTextColor = typedArray.getColor(R.styleable.DayPickerView_colorSelectedDayText, resources.getColor(R.color.selected_day_text));
-        mBusyDaysBgColor = typedArray.getColor(R.styleable.DayPickerView_colorBusyDaysBg, Color.GRAY);
-        mInValidDaysBgColor = typedArray.getColor(R.styleable.DayPickerView_colorInValidDaysBg, Color.GRAY);
-        mBusyDaysTextColor = typedArray.getColor(R.styleable.DayPickerView_colorBusyDaysText, resources.getColor(R.color.normal_day));
-        mInValidDaysTextColor = typedArray.getColor(R.styleable.DayPickerView_colorInValidDaysText, resources.getColor(R.color.normal_day));
+        mDayTextColor = typedArray.getColor(R.styleable.DayPickerView_normalDayTextColor, resources.getColor(R.color.normal_day));
+        mPreviousDayTextColor = typedArray.getColor(R.styleable.DayPickerView_previousDayTextColor, resources.getColor(R.color.normal_day));
+        mSelectedDaysBgColor = typedArray.getColor(R.styleable.DayPickerView_selectedDayBackgroundColor, resources.getColor(R.color.selected_day_background));
+        mSelectedDayTextColor = typedArray.getColor(R.styleable.DayPickerView_selectedDayTextColor, resources.getColor(R.color.selected_day_text));
+        mBusyDaysBgColor = typedArray.getColor(R.styleable.DayPickerView_busyDaysBackgroundColor, Color.GRAY);
+        mInValidDaysBgColor = typedArray.getColor(R.styleable.DayPickerView_inValidDaysBackgroundColor, Color.GRAY);
+        mBusyDaysTextColor = typedArray.getColor(R.styleable.DayPickerView_busyDaysTextColor, resources.getColor(R.color.normal_day));
+        mInValidDaysTextColor = typedArray.getColor(R.styleable.DayPickerView_inValidDaysTextColor, resources.getColor(R.color.normal_day));
 //        mDrawRect = typedArray.getBoolean(R.styleable.DayPickerView_drawRoundRect, true);
 
         mStringBuilder = new StringBuilder(50);
 
-        MINI_DAY_NUMBER_TEXT_SIZE = typedArray.getDimensionPixelSize(R.styleable.DayPickerView_textSizeDay, resources.getDimensionPixelSize(R.dimen.text_size_day));
-        TAG_TEXT_SIZE = typedArray.getDimensionPixelSize(R.styleable.DayPickerView_textSizeTag, resources.getDimensionPixelSize(R.dimen.text_size_tag));
-        YEAR_MONTH_TEXT_SIZE = typedArray.getDimensionPixelSize(R.styleable.DayPickerView_textSizeYearMonth, resources.getDimensionPixelSize(R.dimen.text_size_month));
-        WEEK_TEXT_SIZE = typedArray.getDimensionPixelSize(R.styleable.DayPickerView_textSizeWeek, resources.getDimensionPixelSize(R.dimen.text_size_day_name));
+        MINI_DAY_NUMBER_TEXT_SIZE = typedArray.getDimensionPixelSize(R.styleable.DayPickerView_dayTextSize, resources.getDimensionPixelSize(R.dimen.text_size_day));
+        TAG_TEXT_SIZE = typedArray.getDimensionPixelSize(R.styleable.DayPickerView_tagTextSize, resources.getDimensionPixelSize(R.dimen.text_size_tag));
+        YEAR_MONTH_TEXT_SIZE = typedArray.getDimensionPixelSize(R.styleable.DayPickerView_yearMonthTextSize, resources.getDimensionPixelSize(R.dimen.text_size_month));
+        WEEK_TEXT_SIZE = typedArray.getDimensionPixelSize(R.styleable.DayPickerView_weekTextSize, resources.getDimensionPixelSize(R.dimen.text_size_day_name));
         MONTH_HEADER_SIZE = typedArray.getDimensionPixelOffset(R.styleable.DayPickerView_headerMonthHeight, resources.getDimensionPixelOffset(R.dimen.header_month_height));
         DAY_SELECTED_RECT_SIZE = typedArray.getDimensionPixelSize(R.styleable.DayPickerView_selectedDayRadius, resources.getDimensionPixelOffset(R.dimen.selected_day_radius));
 
-        mRowHeight = ((typedArray.getDimensionPixelSize(R.styleable.DayPickerView_calendarHeight,
+        mRowHeight = ((typedArray.getDimensionPixelSize(R.styleable.DayPickerView_calendarViewHeight,
                 resources.getDimensionPixelOffset(R.dimen.calendar_height)) - MONTH_HEADER_SIZE - ROW_SEPARATOR) / 6);
 
         isPrevDayEnabled = typedArray.getBoolean(R.styleable.DayPickerView_enablePreviousDay, false);
@@ -206,7 +202,7 @@ public class MonthView extends View{
         int x = (mWidth + 2 * mPadding) / 2;
         int y = (MONTH_HEADER_SIZE - WEEK_TEXT_SIZE) / 2 + (YEAR_MONTH_TEXT_SIZE / 3);
         StringBuilder stringBuilder = new StringBuilder(getMonthAndYearString().toLowerCase());
-        stringBuilder.setCharAt(0, Character.toUpperCase(stringBuilder.charAt(0)));
+        //stringBuilder.setCharAt(0, Character.toUpperCase(stringBuilder.charAt(0)));
         canvas.drawText(stringBuilder.toString(), x, y, mYearMonthPaint);
     }
 
@@ -254,10 +250,10 @@ public class MonthView extends View{
             cellCalendar.setDay(mYear, mMonth, day);
 
             // 当天
-            boolean isToady = false;
+            boolean isToday = false;
             if (mHasToday && (mToday == day)) {
-                isToady = true;
-                canvas.drawText("今天", x, getTextYCenter(mDayTextPaint, y - DAY_SELECTED_RECT_SIZE / 2), mDayTextPaint);
+                isToday = true;
+                canvas.drawText(getResources().getString(R.string.today), x, getTextYCenter(mDayTextPaint, y - DAY_SELECTED_RECT_SIZE / 2), mDayTextPaint);
             }
             // 已过去的日期
             boolean isPrevDay = false;
@@ -269,58 +265,51 @@ public class MonthView extends View{
             }
 
             boolean isBeginDay = false;
-            // 绘制起始日期的方格
             if (mStartDate != null && cellCalendar.equals(mStartDate) && !mStartDate.equals(mEndDate)) {
                 isBeginDay = true;
                 drawDayBg(canvas, x, y, mSelectedDayBgPaint);
                 mDayTextPaint.setColor(mSelectedDayTextColor);
-                canvas.drawText("入住", x, getTextYCenter(mDayTextPaint, y + DAY_SELECTED_RECT_SIZE / 2), mDayTextPaint);
-                if(isToady) {
-                    canvas.drawText("今天", x, getTextYCenter(mDayTextPaint, y - DAY_SELECTED_RECT_SIZE / 2), mDayTextPaint);
+                canvas.drawText("start day", x, getTextYCenter(mDayTextPaint, y + DAY_SELECTED_RECT_SIZE / 2), mDayTextPaint);
+                if(isToday) {
+                    canvas.drawText(getResources().getString(R.string.today), x, getTextYCenter(mDayTextPaint, y - DAY_SELECTED_RECT_SIZE / 2), mDayTextPaint);
                 }
             }
 
             boolean isLastDay = false;
-            // 绘制结束日期的方格
             if (mEndDate != null && cellCalendar.equals(mEndDate) && !mStartDate.equals(mEndDate)) {
                 isLastDay = true;
                 drawDayBg(canvas, x, y, mSelectedDayBgPaint);
                 mDayTextPaint.setColor(mSelectedDayTextColor);
-                canvas.drawText("退房", x, getTextYCenter(mDayTextPaint, y + DAY_SELECTED_RECT_SIZE / 2), mDayTextPaint);
+                //canvas.drawText("end day", x, getTextYCenter(mDayTextPaint, y + DAY_SELECTED_RECT_SIZE / 2), mDayTextPaint);
             }
 
-            // 在入住和退房之间的日期
             if (cellCalendar.after(mStartDate) && cellCalendar.before(mEndDate)) {
                 mDayTextPaint.setColor(mSelectedDayTextColor);
                 drawDayBg(canvas, x, y, mSelectedDayBgPaint);
-                // 标签变为白色
                 mTagTextPaint.setColor(Color.WHITE);
-//                canvas.drawText(String.format("%d", day), x, y - DAY_SELECTED_RECT_SIZE / 2, mDayTextPaint);
+                //canvas.drawText(String.format("%d", day), x, y - DAY_SELECTED_RECT_SIZE / 2, mDayTextPaint);
             }
 
-            // 被占用的日期
             boolean isBusyDay = false;
             for (CalendarDay calendarDay : mBusyDays) {
                 if (cellCalendar.equals(calendarDay) && !isPrevDay) {
                     isBusyDay = true;
-//                    RectF rectF = new RectF(x - DAY_SELECTED_RECT_SIZE,
-//                            (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) - DAY_SELECTED_RECT_SIZE,
-//                            x + DAY_SELECTED_RECT_SIZE, (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) + DAY_SELECTED_RECT_SIZE);
+                    RectF rectF = new RectF(x - DAY_SELECTED_RECT_SIZE,
+                            (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) - DAY_SELECTED_RECT_SIZE,
+                            x + DAY_SELECTED_RECT_SIZE, (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) + DAY_SELECTED_RECT_SIZE);
 
-                    // 选择了入住和退房日期，退房日期等于mNearestDay的情况
                     if (mStartDate != null && mEndDate != null && mNearestDay != null &&
                             mEndDate.equals(mNearestDay) && mEndDate.equals(calendarDay)) {
 
                     } else {
-                        // 选择了入住日期，没有选择退房日期，mNearestDay变为可选且不变灰色
                         if (mStartDate != null && mEndDate == null && mNearestDay != null && cellCalendar.equals(mNearestDay)) {
                             mDayTextPaint.setColor(mDayTextColor);
                         } else {
                             drawDayBg(canvas, x, y, mBusyDayBgPaint);
-//                            canvas.drawRoundRect(rectF, 10.0f, 10.0f, mBusyDayBgPaint);
+                            canvas.drawRoundRect(rectF, 10.0f, 10.0f, mBusyDayBgPaint);
                             mDayTextPaint.setColor(mBusyDaysTextColor);
                         }
-                        canvas.drawText("已租", x, getTextYCenter(mBusyDayBgPaint, y + DAY_SELECTED_RECT_SIZE / 2), mDayTextPaint);
+                        canvas.drawText(getResources().getString(R.string.busy), x, getTextYCenter(mBusyDayBgPaint, y + DAY_SELECTED_RECT_SIZE / 2), mDayTextPaint);
                     }
                     canvas.drawText(String.format("%d", day), x, getTextYCenter(mTagTextPaint, y - DAY_SELECTED_RECT_SIZE / 2), mDayTextPaint);
                 }
@@ -336,12 +325,10 @@ public class MonthView extends View{
 //                            (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) - DAY_SELECTED_RECT_SIZE,
 //                            x + DAY_SELECTED_RECT_SIZE, (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) + DAY_SELECTED_RECT_SIZE);
 
-                    // 选择了入住和退房日期，退房日期等于mNearestDay的情况
                     if (mStartDate != null && mEndDate != null && mNearestDay != null &&
                             mEndDate.equals(mNearestDay) && mEndDate.equals(calendarDay)) {
 
                     } else {
-                        // 选择了入住日期，没有选择退房日期，mNearestDay变为可选且不变灰色
                         if (mStartDate != null && mEndDate == null && mNearestDay != null && cellCalendar.equals(mNearestDay)) {
                             mDayTextPaint.setColor(mDayTextColor);
                         } else {
@@ -375,11 +362,11 @@ public class MonthView extends View{
                     }
                 }
                 if (!isCalendarTag) {
-                    canvas.drawText(mDefTag, x, getTextYCenter(mTagTextPaint, y + DAY_SELECTED_RECT_SIZE / 2), mTagTextPaint);
+                    //canvas.drawText(mDefTag, x, getTextYCenter(mTagTextPaint, y + DAY_SELECTED_RECT_SIZE / 2), mTagTextPaint);
                 }
             }
 
-            if (!isToady && !isPrevDay && !isInvalidDays && !isBusyDay) {
+            if (!isToday && !isPrevDay && !isInvalidDays && !isBusyDay) {
                 canvas.drawText(String.format("%d", day), x, getTextYCenter(mTagTextPaint, y - DAY_SELECTED_RECT_SIZE / 2), mDayTextPaint);
             }
 
