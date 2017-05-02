@@ -161,7 +161,7 @@ public class MonthView extends View{
         YEAR_MONTH_TEXT_SIZE = typedArray.getDimensionPixelSize(R.styleable.DayPickerView_yearMonthTextSize, resources.getDimensionPixelSize(R.dimen.text_size_month));
         WEEK_TEXT_SIZE = typedArray.getDimensionPixelSize(R.styleable.DayPickerView_weekTextSize, resources.getDimensionPixelSize(R.dimen.text_size_day_name));
         MONTH_HEADER_SIZE = typedArray.getDimensionPixelOffset(R.styleable.DayPickerView_headerMonthHeight, resources.getDimensionPixelOffset(R.dimen.header_month_height));
-        DAY_SELECTED_RECT_SIZE = typedArray.getDimensionPixelSize(R.styleable.DayPickerView_selectedDayRadius, resources.getDimensionPixelOffset(R.dimen.selected_day_radius));
+        DAY_SELECTED_RECT_SIZE = typedArray.getDimensionPixelSize(R.styleable.DayPickerView_selectedDaySize, resources.getDimensionPixelOffset(R.dimen.selected_day_radius));
 
         mRowHeight = ((typedArray.getDimensionPixelSize(R.styleable.DayPickerView_calendarViewHeight,
                 resources.getDimensionPixelOffset(R.dimen.calendar_height)) - MONTH_HEADER_SIZE - ROW_SEPARATOR) / 6);
@@ -269,9 +269,9 @@ public class MonthView extends View{
                 isBeginDay = true;
                 drawDayBg(canvas, x, y, mSelectedDayBgPaint);
                 mDayTextPaint.setColor(mSelectedDayTextColor);
-                canvas.drawText("start day", x, getTextYCenter(mDayTextPaint, y + DAY_SELECTED_RECT_SIZE / 2), mDayTextPaint);
+                //canvas.drawText("start day", x, getTextYCenter(mDayTextPaint, y + DAY_SELECTED_RECT_SIZE / 2), mDayTextPaint);
                 if(isToday) {
-                    canvas.drawText(getResources().getString(R.string.today), x, getTextYCenter(mDayTextPaint, y - DAY_SELECTED_RECT_SIZE / 2), mDayTextPaint);
+                    //canvas.drawText(getResources().getString(R.string.today), x, getTextYCenter(mDayTextPaint, y - DAY_SELECTED_RECT_SIZE / 2), mDayTextPaint);
                 }
             }
 
@@ -595,7 +595,7 @@ public class MonthView extends View{
     private void drawDayBg(Canvas canvas, int x, int y, Paint paint) {
         RectF rectF = new RectF(x - DAY_SELECTED_RECT_SIZE, y - DAY_SELECTED_RECT_SIZE,
                 x + DAY_SELECTED_RECT_SIZE, y + DAY_SELECTED_RECT_SIZE);
-        canvas.drawRoundRect(rectF, 10.0f, 10.0f, paint);
+        canvas.drawRect(rectF, paint);
     }
 
 

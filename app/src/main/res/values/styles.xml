@@ -18,7 +18,7 @@
         <attr name="yearMonthTextSize" format="dimension" />
         <attr name="weekTextSize" format="dimension" />
         <attr name="headerMonthHeight" format="dimension" />
-        <attr name="selectedDayRadius" format="dimension" />
+        <attr name="selectedDaySize" format="dimension"/>
         <attr name="calendarViewHeight" format="dimension" />
         <attr name="enablePreviousDay" format="boolean" />
     </declare-styleable>
