@@ -233,13 +233,16 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
 
             if(mController != null) {
                 mController.onDateRangeSelected(addSelectedDays());
+                mController.onEndDaySelected(calendarDay);
             }
         } else if (rangeDays.getLast() != null) {
             rangeDays.setFirst(calendarDay);
             rangeDays.setLast(null);
             mNearestDay = getNearestDay(calendarDay);
+            mController.onStartDaySelected(calendarDay);
         } else {
             rangeDays.setFirst(calendarDay);
+            mController.onStartDaySelected(calendarDay);
             mNearestDay = getNearestDay(calendarDay);
         }
 

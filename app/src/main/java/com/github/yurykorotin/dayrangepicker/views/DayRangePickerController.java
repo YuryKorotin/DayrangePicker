@@ -19,6 +19,10 @@ public interface DayRangePickerController {
     }
     void onDayOfMonthSelected(CalendarDay calendarDay);
 
+    void onStartDaySelected(CalendarDay calendarDay);
+
+    void onEndDaySelected(CalendarDay calendarDay);
+
     void onDateRangeSelected(List<CalendarDay> selectedDays);
 
     void onDaysSelected(List<CalendarDay> seleDaysList);

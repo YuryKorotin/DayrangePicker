@@ -148,7 +148,7 @@ public class MonthView extends View{
         mPreviousDayTextColor = typedArray.getColor(R.styleable.DayPickerView_previousDayTextColor, resources.getColor(R.color.normal_day));
         mSelectedDaysBgColor = typedArray.getColor(R.styleable.DayPickerView_selectedDayBackgroundColor, resources.getColor(R.color.selected_day_background));
         mSelectedDayTextColor = typedArray.getColor(R.styleable.DayPickerView_selectedDayTextColor, resources.getColor(R.color.selected_day_text));
-        mBusyDaysBgColor = typedArray.getColor(R.styleable.DayPickerView_busyDaysBackgroundColor, Color.GRAY);
+        mBusyDaysBgColor = typedArray.getColor(R.styleable.DayPickerView_busyDaysBackgroundColor, Color.RED);
         mInValidDaysBgColor = typedArray.getColor(R.styleable.DayPickerView_inValidDaysBackgroundColor, Color.GRAY);
         mBusyDaysTextColor = typedArray.getColor(R.styleable.DayPickerView_busyDaysTextColor, resources.getColor(R.color.normal_day));
         mInValidDaysTextColor = typedArray.getColor(R.styleable.DayPickerView_inValidDaysTextColor, resources.getColor(R.color.normal_day));
@@ -234,7 +234,6 @@ public class MonthView extends View{
     }
 
     protected void drawMonthCell(Canvas canvas) {
-        // ?
         int y = MONTH_HEADER_SIZE + ROW_SEPARATOR + mRowHeight / 2;
         int paddingDay = (mWidth - 2 * mPadding) / (2 * mNumDays);
         int dayOffset = findDayOffset();
@@ -249,13 +248,10 @@ public class MonthView extends View{
 
             cellCalendar.setDay(mYear, mMonth, day);
 
-            // 当天
             boolean isToday = false;
-            if (mHasToday && (mToday == day)) {
-                isToday = true;
-                canvas.drawText(getResources().getString(R.string.today), x, getTextYCenter(mDayTextPaint, y - DAY_SELECTED_RECT_SIZE / 2), mDayTextPaint);
-            }
-            // 已过去的日期
+
+            //drawToday(isToday, day, canvas, x, y);
+
             boolean isPrevDay = false;
             if (!isPrevDayEnabled && prevDay(day, today)) {
                 isPrevDay = true;
@@ -376,6 +372,17 @@ public class MonthView extends View{
                 y += mRowHeight;
             }
             day++;
+        }
+    }
+
+    private void drawToday(boolean isToday, int day, Canvas canvas, int x, int y) {
+        if (mHasToday && (mToday == day)) {
+            isToday = true;
+            canvas.drawText(
+                    getResources().getString(R.string.today),
+                    x,
+                    getTextYCenter(mDayTextPaint, y - DAY_SELECTED_RECT_SIZE / 2),
+                    mDayTextPaint);
         }
     }
 

@@ -20,6 +20,16 @@ public class StartActivity extends AppCompatActivity {
         }
 
         @Override
+        public void onStartDaySelected(CalendarDay calendarDay) {
+            Toast.makeText(StartActivity.this, "start", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onEndDaySelected(CalendarDay calendarDay) {
+            Toast.makeText(StartActivity.this, "end", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
         public void onDateRangeSelected(List<CalendarDay> selectedDays) {
             Toast.makeText(StartActivity.this, "onDateRangeSelected", Toast.LENGTH_SHORT).show();
         }
