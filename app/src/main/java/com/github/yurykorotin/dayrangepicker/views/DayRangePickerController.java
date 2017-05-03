@@ -8,8 +8,10 @@ import com.github.yurykorotin.dayrangepicker.models.CalendarDay;
 
 import java.util.List;
 
-public interface DayRangePickerController {
-    enum FailEven {
+public abstract class DayRangePickerController {
+    private OnDaySelectionListener mOnDaySelectionListener;
+
+    protected enum FailEven {
         CONTAIN_NO_SELECTED,
         CONTAIN_INVALID,
         NO_REACH_LEAST_DAYS,
@@ -17,15 +19,32 @@ public interface DayRangePickerController {
         END_MT_START;
 
     }
-    void onDayOfMonthSelected(CalendarDay calendarDay);
 
-    void onStartDaySelected(CalendarDay calendarDay);
+    public DayRangePickerController() {
 
-    void onEndDaySelected(CalendarDay calendarDay);
+    }
 
-    void onDateRangeSelected(List<CalendarDay> selectedDays);
+    public DayRangePickerController(OnDaySelectionListener onDaySelectionListener) {
+        mOnDaySelectionListener = onDaySelectionListener;
+    }
 
-    void onDaysSelected(List<CalendarDay> seleDaysList);
+    protected abstract void onDayOfMonthSelected(CalendarDay calendarDay);
 
-    void alertSelectedFail(FailEven even);
+    protected void onStartDaySelected(CalendarDay calendarDay) {
+        if (mOnDaySelectionListener != null) {
+            mOnDaySelectionListener.onStartDaySelected(calendarDay);
+        }
+    }
+
+    protected void onEndDaySelected(CalendarDay calendarDay) {
+        if (mOnDaySelectionListener != null) {
+            mOnDaySelectionListener.onEndDaySelected(calendarDay);
+        }
+    }
+
+    protected abstract void onDateRangeSelected(List<CalendarDay> selectedDays);
+
+    protected abstract void onDaysSelected(List<CalendarDay> seleDaysList);
+
+    protected abstract void alertSelectedFail(FailEven even);
 }

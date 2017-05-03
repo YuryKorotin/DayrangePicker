@@ -7,40 +7,49 @@ import android.widget.Toast;
 import com.github.yurykorotin.dayrangepicker.models.CalendarDay;
 import com.github.yurykorotin.dayrangepicker.models.RangeModel;
 import com.github.yurykorotin.dayrangepicker.views.DayRangePickerController;
-import com.github.yurykorotin.dayrangepicker.views.DayRangePickerView;
+import com.github.yurykorotin.dayrangepicker.views.DayRangeSelectionView;
+import com.github.yurykorotin.dayrangepicker.views.OnDaySelectionListener;
 
 import java.util.List;
 
 public class StartActivity extends AppCompatActivity {
 
-    class DayRangeController implements DayRangePickerController {
+    class DayRangeController extends DayRangePickerController {
+        public DayRangeController() {
+
+        }
+
+        public DayRangeController(OnDaySelectionListener onDaySelectionListener) {
+            super(onDaySelectionListener);
+        }
+
         @Override
-        public void onDayOfMonthSelected(CalendarDay calendarDay) {
+        protected void onDayOfMonthSelected(CalendarDay calendarDay) {
             Toast.makeText(StartActivity.this, "onDayOfMonthSelected", Toast.LENGTH_SHORT).show();
         }
 
         @Override
-        public void onStartDaySelected(CalendarDay calendarDay) {
+        protected void onStartDaySelected(CalendarDay calendarDay) {
             Toast.makeText(StartActivity.this, "start", Toast.LENGTH_SHORT).show();
         }
 
         @Override
-        public void onEndDaySelected(CalendarDay calendarDay) {
+        protected void onEndDaySelected(CalendarDay calendarDay) {
             Toast.makeText(StartActivity.this, "end", Toast.LENGTH_SHORT).show();
         }
 
         @Override
-        public void onDateRangeSelected(List<CalendarDay> selectedDays) {
+        protected void onDateRangeSelected(List<CalendarDay> selectedDays) {
             Toast.makeText(StartActivity.this, "onDateRangeSelected", Toast.LENGTH_SHORT).show();
         }
 
         @Override
-        public void onDaysSelected(List<CalendarDay> seleDaysList) {
+        protected void onDaysSelected(List<CalendarDay> seleDaysList) {
 
         }
 
         @Override
-        public void alertSelectedFail(DayRangePickerController.FailEven even) {
+        protected void alertSelectedFail(DayRangePickerController.FailEven even) {
             Toast.makeText(StartActivity.this, "alertSelectedFail", Toast.LENGTH_SHORT).show();
         }
     }
@@ -57,10 +66,8 @@ public class StartActivity extends AppCompatActivity {
         dataModel.leastDaysNum = 2;
         dataModel.mostDaysNum = 100;
 
-        DayRangePickerView dayRangePicker = (DayRangePickerView) findViewById(R.id.calendar);
+        DayRangeSelectionView dayRangePicker = (DayRangeSelectionView) findViewById(R.id.calendar);
 
         dayRangePicker.setParameter(dataModel, new DayRangeController());
-
-
     }
 }

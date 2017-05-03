@@ -17,7 +17,7 @@ import java.util.Calendar;
  * Created by yuri on 27.04.17.
  */
 
-public class DayRangePickerView extends RecyclerView {
+public class DayRangeSelectionView extends RecyclerView {
     protected Context mContext;
     protected CalendarAdapter mAdapter;
     private DayRangePickerController mController;
@@ -29,15 +29,15 @@ public class DayRangePickerView extends RecyclerView {
 
     private RangeModel dataModel;
 
-    public DayRangePickerView(Context context) {
+    public DayRangeSelectionView(Context context) {
         this(context, null);
     }
 
-    public DayRangePickerView(Context context, AttributeSet attrs) {
+    public DayRangeSelectionView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public DayRangePickerView(Context context, AttributeSet attrs, int defStyle) {
+    public DayRangeSelectionView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         typedArray = context.obtainStyledAttributes(attrs, R.styleable.DayPickerView);
         setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
