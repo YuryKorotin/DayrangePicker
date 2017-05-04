@@ -94,6 +94,12 @@ public class TabbedDayRangePicker extends LinearLayout{
         mDayRangeSelectionView.setParameter(dataModel, new DayRangeController());
     }
 
+    public void setDataModel(RangeModel dataModel, DayRangePickerController controller) {
+        if (mDayRangeSelectionView != null) {
+            mDayRangeSelectionView.setParameter(dataModel, controller);
+        }
+    }
+
     public TabbedDayRangePicker(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }

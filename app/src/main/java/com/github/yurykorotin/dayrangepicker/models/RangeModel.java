@@ -12,7 +12,7 @@ public class RangeModel implements Serializable {
     public enum TYPE {TYPE_MULTI, TYPE_RANGE, TYPE_ONLY_READ}
 
     TYPE type;
-    public int yearStart;
+    public int yearStart = Calendar.getInstance().get(Calendar.YEAR);
     public int monthStart;
     public int monthCount;
     public List<CalendarDay> invalidDays;
