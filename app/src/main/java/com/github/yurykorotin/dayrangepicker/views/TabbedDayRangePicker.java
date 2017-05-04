@@ -24,6 +24,8 @@ import java.util.List;
 public class TabbedDayRangePicker extends LinearLayout{
     private DayRangeSelectionView mDayRangeSelectionView;
     private TabLayout mTabLayout;
+    private TabLayout.Tab mFirstDayTab;
+    private TabLayout.Tab mLastDayTab;
 
     class DayRangeController extends DayRangePickerController {
         public DayRangeController() {
@@ -40,6 +42,7 @@ public class TabbedDayRangePicker extends LinearLayout{
 
         @Override
         protected void onStartDaySelected(CalendarDay calendarDay) {
+            mFirstDayTab.select();
         }
 
         @Override
@@ -76,6 +79,17 @@ public class TabbedDayRangePicker extends LinearLayout{
         dataModel.mostDaysNum = 100;
 
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
+
+        mFirstDayTab = mTabLayout.newTab();
+        mLastDayTab = mTabLayout.newTab();
+
+        mFirstDayTab.setText();
+        mLastDayTab.setText();
+
+        mTabLayout.addTab(mFirstDayTab);
+        mTabLayout.addTab(mLastDayTab);
+
+
         mDayRangeSelectionView = (DayRangeSelectionView) findViewById(R.id.calendar);
         mDayRangeSelectionView.setParameter(dataModel, new DayRangeController());
     }
