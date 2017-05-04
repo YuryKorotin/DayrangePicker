@@ -21,7 +21,12 @@
         <attr name="selectedDaySize" format="dimension"/>
         <attr name="calendarViewHeight" format="dimension" />
         <attr name="enablePreviousDay" format="boolean" />
-        <attr name="firstDayTitle" format="string"/>
+    </declare-styleable>
+    <declare-styleable name="DayPickerView">
+        <attr name="startYear" format="integer"/>
+        <attr name="startMonth" format="integer"/>
+        <attr name="monthCount" format="integer"/>
+        <attr name="lastDayTitle" format="string"/>
         <attr name="lastDayTitle" format="string"/>
     </declare-styleable>
 </resources>

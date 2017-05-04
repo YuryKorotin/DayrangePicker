@@ -26,6 +26,8 @@ public class TabbedDayRangePicker extends LinearLayout{
     private TabLayout mTabLayout;
     private TabLayout.Tab mFirstDayTab;
     private TabLayout.Tab mLastDayTab;
+    private TypedArray mAttributesArray;
+    private Context mContext;
 
     class DayRangeController extends DayRangePickerController {
         public DayRangeController() {
@@ -102,10 +104,18 @@ public class TabbedDayRangePicker extends LinearLayout{
 
     public TabbedDayRangePicker(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
+        mAttributesArray = context.obtainStyledAttributes(attrs, R.styleable.TabbedDayRangePicker);
+        setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        init(context);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public TabbedDayRangePicker(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+    }
+    public void init(Context paramContext) {
+        mContext = paramContext;
+        setUpListView();
     }
 }
