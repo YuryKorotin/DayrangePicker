@@ -72,8 +72,6 @@ public class TabbedDayRangePicker extends LinearLayout{
         inflater.inflate(R.layout.tabbed_picker, this, true);
 
         RangeModel dataModel = new RangeModel();
-        dataModel.yearStart = 2016;
-        dataModel.monthStart = 6;
         dataModel.monthCount = 16;
         dataModel.leastDaysNum = 2;
         dataModel.mostDaysNum = 100;
@@ -89,9 +87,7 @@ public class TabbedDayRangePicker extends LinearLayout{
         mTabLayout.addTab(mFirstDayTab);
         mTabLayout.addTab(mLastDayTab);
 
-
         mDayRangeSelectionView = (DayRangeSelectionView) findViewById(R.id.calendar);
-        mDayRangeSelectionView.setParameter(dataModel, new DayRangeController());
     }
 
     public void setDataModel(RangeModel dataModel, DayRangePickerController controller) {

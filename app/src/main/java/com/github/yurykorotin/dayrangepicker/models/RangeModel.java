@@ -8,13 +8,14 @@ import java.util.List;
  */
 
 public class RangeModel implements Serializable {
-
+    
+    public static int DEFAULT_MONTH_COUNT = 24;
     public enum TYPE {TYPE_MULTI, TYPE_RANGE, TYPE_ONLY_READ}
 
     TYPE type;
     public int yearStart = Calendar.getInstance().get(Calendar.YEAR);
-    public int monthStart;
-    public int monthCount;
+    public int monthStart = Calendar.getInstance().get(Calendar.MONTH);
+    public int monthCount = DEFAULT_MONTH_COUNT;
     public List<CalendarDay> invalidDays;
     public List<CalendarDay> busyDays;
     public DaySelection<CalendarDay> selectedDays;
