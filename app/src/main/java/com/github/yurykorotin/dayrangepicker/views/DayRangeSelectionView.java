@@ -118,4 +118,9 @@ public class DayRangeSelectionView extends RecyclerView {
 
         scrollToPosition(position);
     }
+
+    public void setAttributes(TypedArray attributes) {
+        typedArray = attributes;
+        init(getContext());
+    }
 }

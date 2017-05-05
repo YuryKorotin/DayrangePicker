@@ -25,7 +25,8 @@ public class TabbedDayRangePicker extends LinearLayout{
     private TabLayout mTabLayout;
     private TabLayout.Tab mFirstDayTab;
     private TabLayout.Tab mLastDayTab;
-    private TypedArray mAttributesArray;
+    private TypedArray mTabbedAttributesArray;
+    private TypedArray mCalendarAttributesArray;
     private Context mContext;
 
     class DayRangeController extends DayRangePickerController {
@@ -84,7 +85,8 @@ public class TabbedDayRangePicker extends LinearLayout{
     public TabbedDayRangePicker(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        mAttributesArray = context.obtainStyledAttributes(attrs, R.styleable.TabbedDayRangePicker);
+        mTabbedAttributesArray = context.obtainStyledAttributes(attrs, R.styleable.TabbedDayRangePicker);
+        mCalendarAttributesArray = context.obtainStyledAttributes(attrs, R.styleable.DayPickerView);
         setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
         init(context);
@@ -118,13 +120,14 @@ public class TabbedDayRangePicker extends LinearLayout{
         mTabLayout.addTab(mLastDayTab);
 
         mDayRangeSelectionView = (DayRangeSelectionView) findViewById(R.id.calendar);
+        mDayRangeSelectionView.setAttributes(mCalendarAttributesArray);
 
         if (mFirstDayTab == null || mLastDayTab == null) {
             return;
         }
 
-        String firstTitle = mAttributesArray.getString(R.styleable.TabbedDayRangePicker_firstDayTitle);
-        String lastTitle = mAttributesArray.getString(R.styleable.TabbedDayRangePicker_lastDayTitle);
+        String firstTitle = mTabbedAttributesArray.getString(R.styleable.TabbedDayRangePicker_firstDayTitle);
+        String lastTitle = mTabbedAttributesArray.getString(R.styleable.TabbedDayRangePicker_lastDayTitle);
 
         if (firstTitle == null) {
             firstTitle = getResources().getString(R.string.first_title);
