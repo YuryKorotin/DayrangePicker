@@ -22,11 +22,11 @@
         <attr name="calendarViewHeight" format="dimension" />
         <attr name="enablePreviousDay" format="boolean" />
     </declare-styleable>
-    <declare-styleable name="DayPickerView">
+    <declare-styleable name="TabbedDayRangePicker">
         <attr name="startYear" format="integer"/>
         <attr name="startMonth" format="integer"/>
         <attr name="monthCount" format="integer"/>
-        <attr name="lastDayTitle" format="string"/>
+        <attr name="firstDayTitle" format="string"/>
         <attr name="lastDayTitle" format="string"/>
     </declare-styleable>
 </resources>

@@ -2,14 +2,13 @@ package com.github.yurykorotin.dayrangepicker.views;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.github.yurykorotin.dayrangepicker.R;
 import com.github.yurykorotin.dayrangepicker.models.CalendarDay;
@@ -69,27 +68,7 @@ public class TabbedDayRangePicker extends LinearLayout{
     public TabbedDayRangePicker(Context context) {
         super(context);
 
-        LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.tabbed_picker, this, true);
-
-        RangeModel dataModel = new RangeModel();
-        dataModel.monthCount = 16;
-        dataModel.leastDaysNum = 2;
-        dataModel.mostDaysNum = 100;
-
-        mTabLayout = (TabLayout) findViewById(R.id.tabs);
-
-        mFirstDayTab = mTabLayout.newTab();
-        mLastDayTab = mTabLayout.newTab();
-
-        mFirstDayTab.setText();
-        mLastDayTab.setText();
-
-        mTabLayout.addTab(mFirstDayTab);
-        mTabLayout.addTab(mLastDayTab);
-
-        mDayRangeSelectionView = (DayRangeSelectionView) findViewById(R.id.calendar);
+        init(context);
     }
 
     public void setDataModel(RangeModel dataModel, DayRangePickerController controller) {
@@ -107,6 +86,7 @@ public class TabbedDayRangePicker extends LinearLayout{
 
         mAttributesArray = context.obtainStyledAttributes(attrs, R.styleable.TabbedDayRangePicker);
         setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
         init(context);
     }
 
@@ -116,6 +96,45 @@ public class TabbedDayRangePicker extends LinearLayout{
     }
     public void init(Context paramContext) {
         mContext = paramContext;
-        setUpListView();
+
+        LayoutInflater inflater = (LayoutInflater) paramContext
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater.inflate(R.layout.tabbed_picker, this, true);
+
+        RangeModel dataModel = new RangeModel();
+        dataModel.leastDaysNum = 2;
+        dataModel.mostDaysNum = 100;
+
+        setupTabs();
+    }
+
+    private void setupTabs() {
+        mTabLayout = (TabLayout) findViewById(R.id.tabs);
+
+        mFirstDayTab = mTabLayout.newTab();
+        mLastDayTab = mTabLayout.newTab();
+
+        mTabLayout.addTab(mFirstDayTab);
+        mTabLayout.addTab(mLastDayTab);
+
+        mDayRangeSelectionView = (DayRangeSelectionView) findViewById(R.id.calendar);
+
+        if (mFirstDayTab == null || mLastDayTab == null) {
+            return;
+        }
+
+        String firstTitle = mAttributesArray.getString(R.styleable.TabbedDayRangePicker_firstDayTitle);
+        String lastTitle = mAttributesArray.getString(R.styleable.TabbedDayRangePicker_lastDayTitle);
+
+        if (firstTitle == null) {
+            firstTitle = getResources().getString(R.string.first_title);
+        }
+
+        if (lastTitle == null) {
+            lastTitle = getResources().getString(R.string.last_title);
+        }
+
+        mFirstDayTab.setText(firstTitle);
+        mLastDayTab.setText(lastTitle);
     }
 }
