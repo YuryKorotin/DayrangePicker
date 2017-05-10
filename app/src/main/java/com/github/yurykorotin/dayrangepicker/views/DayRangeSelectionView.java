@@ -2,6 +2,7 @@ package com.github.yurykorotin.dayrangepicker.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.annotation.IntDef;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -21,13 +22,48 @@ public class DayRangeSelectionView extends RecyclerView {
     protected Context mContext;
     protected CalendarAdapter mAdapter;
     private DayRangePickerController mController;
+    private @SelectionMode int mSelectionMode;
+
+    public @SelectionMode int getSelectionMode() {
+        return mSelectionMode;
+    }
+
+    public void setSelectionMode(@SelectionMode int selectionMode) {
+        mSelectionMode = selectionMode;
+
+        notifyModeChange();
+    }
+
+    private void notifyModeChange() {
+
+        switch (mSelectionMode) {
+            case FIRST_DATE_SELECTION_MODE:
+                mDataModel.selectedDays.setFirst(null);
+                break;
+            case LAST_DATE_SELECTION_MODE:
+                mDataModel.selectedDays.setLast(null);
+        }
+
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @IntDef({FIRST_DATE_SELECTION_MODE, LAST_DATE_SELECTION_MODE})
+
+    public @interface SelectionMode{}
+
+    public static final int FIRST_DATE_SELECTION_MODE = 0;
+    public static final int LAST_DATE_SELECTION_MODE = 1;
+
     protected int mCurrentScrollState = 0;
     protected long mPreviousScrollPosition;
     protected int mPreviousScrollState = 0;
+
     private TypedArray typedArray;
     private OnScrollListener onScrollListener;
 
-    private RangeModel dataModel;
+    private RangeModel mDataModel;
 
     public DayRangeSelectionView(Context context) {
         this(context, null);
@@ -66,7 +102,7 @@ public class DayRangeSelectionView extends RecyclerView {
 
     protected void setUpAdapter() {
         if (mAdapter == null) {
-            mAdapter = new CalendarAdapter(getContext(), typedArray, mController, dataModel);
+            mAdapter = new CalendarAdapter(getContext(), typedArray, mController, mDataModel);
             setAdapter(mAdapter);
         }
         mAdapter.notifyDataSetChanged();
@@ -80,17 +116,17 @@ public class DayRangeSelectionView extends RecyclerView {
     }
 
     /**
-     * @param dataModel
-     * @param mController
+     * @param dataModel contains info of day ranges
+     * @param controller callbacks the selection actions
      */
-    public void setParameter(RangeModel dataModel, DayRangePickerController mController) {
+    public void setParameter(RangeModel dataModel, DayRangePickerController controller) {
         if (dataModel == null) {
             return;
         }
-        this.dataModel = dataModel;
-        this.mController = mController;
+        mDataModel = dataModel;
+        mController = controller;
         setUpAdapter();
-        scrollToSelectedPosition(dataModel.selectedDays, dataModel.monthStart);
+        scrollToSelectedPosition(mDataModel.selectedDays, mDataModel.monthStart);
         scrollToCurrentMonth();
     }
 
@@ -110,10 +146,10 @@ public class DayRangeSelectionView extends RecyclerView {
 
         int position = 0;
         int totalMonthCount = 12;
-        if (year == dataModel.yearStart) {
-            position = month - dataModel.monthStart;
+        if (year == mDataModel.yearStart) {
+            position = month - mDataModel.monthStart;
         } else {
-            position = totalMonthCount - dataModel.monthStart + month;
+            position = totalMonthCount - mDataModel.monthStart + month;
         }
 
         scrollToPosition(position);

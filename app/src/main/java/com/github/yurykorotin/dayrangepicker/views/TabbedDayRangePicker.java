@@ -7,7 +7,7 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import com.github.yurykorotin.dayrangepicker.R;
@@ -143,5 +143,19 @@ public class TabbedDayRangePicker extends LinearLayout implements OnDaySelection
 
         boolean isTabsEnabled = mTabbedAttributesArray.getBoolean(R.styleable.TabbedDayRangePicker_tabSwitchEnabled, false);
         Utils.enableTabs(mTabLayout, isTabsEnabled);
+
+        if (isTabsEnabled) {
+            mTabLayout.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int selectedTab = mTabLayout.getSelectedTabPosition();
+                    if (selectedTab == mFirstDayTab.getPosition()) {
+                        mDayRangeSelectionView.setSelectionMode(DayRangeSelectionView.FIRST_DATE_SELECTION_MODE);
+                    } else if (selectedTab == mLastDayTab.getPosition()) {
+                        mDayRangeSelectionView.setSelectionMode(DayRangeSelectionView.LAST_DATE_SELECTION_MODE);
+                    }
+                }
+            });
+        }
     }
 }
