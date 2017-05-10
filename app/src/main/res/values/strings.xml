@@ -3,6 +3,4 @@
     <string name="sans_serif" translatable="false">sans-serif</string>
     <string name="today">today</string>
     <string name="busy">busy</string>
-    <string name="first_title">Arrive day</string>
-    <string name="last_title">Depart day</string>
 </resources>

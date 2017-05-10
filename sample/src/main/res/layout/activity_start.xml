@@ -13,6 +13,7 @@
         android:layout_height="match_parent"
         app:normalDayTextColor="@color/black"
         app:previousDayTextColor="@color/inactive_textColor"
+        app:selectedDayBackgroundColor="#000000"
         app:yearMonthTextColor="@color/weekAndYearTextColor"
         app:weekTextColor="@color/weekAndYearTextColor"
         app:inValidDaysTextColor="@color/black"
@@ -23,6 +24,8 @@
         app:weekTextSize="12sp"
         app:headerMonthHeight="58dp"
         app:calendarViewHeight="320dp"
+        app:firstDayTitle="@string/first_title"
+        app:lastDayTitle="@string/last_title"
         app:enablePreviousDay="false"/>
 
 </android.support.constraint.ConstraintLayout>

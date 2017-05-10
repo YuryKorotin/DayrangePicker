@@ -121,22 +121,19 @@ public class TabbedDayRangePicker extends LinearLayout implements OnDaySelection
         mTabLayout.addTab(mFirstDayTab);
         mTabLayout.addTab(mLastDayTab);
 
+        String firstTitle = mTabbedAttributesArray.getString(R.styleable.TabbedDayRangePicker_firstDayTitle);
+        String lastTitle = mTabbedAttributesArray.getString(R.styleable.TabbedDayRangePicker_lastDayTitle);
+
+        if (firstTitle == null || lastTitle == null) {
+            mTabLayout.setVisibility(GONE);
+            return;
+        }
+
         mDayRangeSelectionView = (DayRangeSelectionView) findViewById(R.id.day_range_selection_view);
         mDayRangeSelectionView.setAttributes(mCalendarAttributesArray);
 
         if (mFirstDayTab == null || mLastDayTab == null) {
             return;
-        }
-
-        String firstTitle = mTabbedAttributesArray.getString(R.styleable.TabbedDayRangePicker_firstDayTitle);
-        String lastTitle = mTabbedAttributesArray.getString(R.styleable.TabbedDayRangePicker_lastDayTitle);
-
-        if (firstTitle == null) {
-            firstTitle = getResources().getString(R.string.first_title);
-        }
-
-        if (lastTitle == null) {
-            lastTitle = getResources().getString(R.string.last_title);
         }
 
         mFirstDayTab.setText(firstTitle);
@@ -145,7 +142,6 @@ public class TabbedDayRangePicker extends LinearLayout implements OnDaySelection
         mFirstDayTab.select();
 
         boolean isTabsEnabled = mTabbedAttributesArray.getBoolean(R.styleable.TabbedDayRangePicker_tabSwitchEnabled, false);
-
         Utils.enableTabs(mTabLayout, isTabsEnabled);
     }
 }
