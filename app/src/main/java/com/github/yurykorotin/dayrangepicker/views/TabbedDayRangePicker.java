@@ -20,7 +20,7 @@ import java.util.List;
  * Created by yuri on 03.05.17.
  */
 
-public class TabbedDayRangePicker extends LinearLayout{
+public class TabbedDayRangePicker extends LinearLayout implements OnDaySelectionListener{
     private DayRangeSelectionView mDayRangeSelectionView;
     private TabLayout mTabLayout;
     private TabLayout.Tab mFirstDayTab;
@@ -29,7 +29,18 @@ public class TabbedDayRangePicker extends LinearLayout{
     private TypedArray mCalendarAttributesArray;
     private Context mContext;
 
-    class DayRangeController extends DayRangePickerController {
+    @Override
+    public void onStartDaySelected(CalendarDay calendarDay) {
+        if (mLastDayTab != null) {
+            mLastDayTab.select();
+        }
+    }
+
+    @Override
+    public void onEndDaySelected(CalendarDay calendarDay) {
+    }
+
+    public static class DayRangeController extends DayRangePickerController {
         public DayRangeController() {
 
         }
@@ -40,15 +51,6 @@ public class TabbedDayRangePicker extends LinearLayout{
 
         @Override
         protected void onDayOfMonthSelected(CalendarDay calendarDay) {
-        }
-
-        @Override
-        protected void onStartDaySelected(CalendarDay calendarDay) {
-            mFirstDayTab.select();
-        }
-
-        @Override
-        protected void onEndDaySelected(CalendarDay calendarDay) {
         }
 
         @Override
@@ -96,12 +98,11 @@ public class TabbedDayRangePicker extends LinearLayout{
     public TabbedDayRangePicker(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
+
     public void init(Context paramContext) {
         mContext = paramContext;
 
-        LayoutInflater inflater = (LayoutInflater) paramContext
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.tabbed_picker, this, true);
+        inflate(mContext, R.layout.tabbed_picker, this);
 
         RangeModel dataModel = new RangeModel();
         dataModel.leastDaysNum = 2;
@@ -139,5 +140,7 @@ public class TabbedDayRangePicker extends LinearLayout{
 
         mFirstDayTab.setText(firstTitle);
         mLastDayTab.setText(lastTitle);
+
+        mFirstDayTab.select();
     }
 }

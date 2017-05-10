@@ -9,65 +9,22 @@ import com.github.yurykorotin.dayrangepicker.models.RangeModel;
 import com.github.yurykorotin.dayrangepicker.views.DayRangePickerController;
 import com.github.yurykorotin.dayrangepicker.views.DayRangeSelectionView;
 import com.github.yurykorotin.dayrangepicker.views.OnDaySelectionListener;
+import com.github.yurykorotin.dayrangepicker.views.TabbedDayRangePicker;
 
 import java.util.List;
 
 public class StartActivity extends AppCompatActivity {
-
-    class DayRangeController extends DayRangePickerController {
-        public DayRangeController() {
-
-        }
-
-        public DayRangeController(OnDaySelectionListener onDaySelectionListener) {
-            super(onDaySelectionListener);
-        }
-
-        @Override
-        protected void onDayOfMonthSelected(CalendarDay calendarDay) {
-            Toast.makeText(StartActivity.this, "onDayOfMonthSelected", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        protected void onStartDaySelected(CalendarDay calendarDay) {
-            Toast.makeText(StartActivity.this, "start", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        protected void onEndDaySelected(CalendarDay calendarDay) {
-            Toast.makeText(StartActivity.this, "end", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        protected void onDateRangeSelected(List<CalendarDay> selectedDays) {
-            Toast.makeText(StartActivity.this, "onDateRangeSelected", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        protected void onDaysSelected(List<CalendarDay> seleDaysList) {
-
-        }
-
-        @Override
-        protected void alertSelectedFail(DayRangePickerController.FailEven even) {
-            Toast.makeText(StartActivity.this, "alertSelectedFail", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
         RangeModel dataModel = new RangeModel();
-        dataModel.yearStart = 2016;
-        dataModel.monthStart = 6;
-        dataModel.monthCount = 16;
         dataModel.leastDaysNum = 2;
         dataModel.mostDaysNum = 100;
 
-        DayRangeSelectionView dayRangePicker = (DayRangeSelectionView) findViewById(R.id.calendar);
+        TabbedDayRangePicker dayRangePicker = (TabbedDayRangePicker) findViewById(R.id.calendar);
 
-        dayRangePicker.setParameter(dataModel, new DayRangeController());
+        dayRangePicker.setDataModel(dataModel, new TabbedDayRangePicker.DayRangeController(dayRangePicker));
     }
 }
