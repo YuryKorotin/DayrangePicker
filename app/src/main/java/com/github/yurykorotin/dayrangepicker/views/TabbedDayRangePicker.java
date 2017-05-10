@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 
 import com.github.yurykorotin.dayrangepicker.R;
+import com.github.yurykorotin.dayrangepicker.Utils;
 import com.github.yurykorotin.dayrangepicker.models.CalendarDay;
 import com.github.yurykorotin.dayrangepicker.models.RangeModel;
 
@@ -81,7 +82,7 @@ public class TabbedDayRangePicker extends LinearLayout implements OnDaySelection
     }
 
     public TabbedDayRangePicker(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public TabbedDayRangePicker(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -120,7 +121,7 @@ public class TabbedDayRangePicker extends LinearLayout implements OnDaySelection
         mTabLayout.addTab(mFirstDayTab);
         mTabLayout.addTab(mLastDayTab);
 
-        mDayRangeSelectionView = (DayRangeSelectionView) findViewById(R.id.calendar);
+        mDayRangeSelectionView = (DayRangeSelectionView) findViewById(R.id.day_range_selection_view);
         mDayRangeSelectionView.setAttributes(mCalendarAttributesArray);
 
         if (mFirstDayTab == null || mLastDayTab == null) {
@@ -142,5 +143,9 @@ public class TabbedDayRangePicker extends LinearLayout implements OnDaySelection
         mLastDayTab.setText(lastTitle);
 
         mFirstDayTab.select();
+
+        boolean isTabsEnabled = mTabbedAttributesArray.getBoolean(R.styleable.TabbedDayRangePicker_tabSwitchEnabled, false);
+
+        Utils.enableTabs(mTabLayout, isTabsEnabled);
     }
 }

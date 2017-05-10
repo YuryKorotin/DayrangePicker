@@ -28,5 +28,6 @@
         <attr name="monthCount" format="integer"/>
         <attr name="firstDayTitle" format="string"/>
         <attr name="lastDayTitle" format="string"/>
+        <attr name="tabSwitchEnabled" format="boolean"/>
     </declare-styleable>
 </resources>
