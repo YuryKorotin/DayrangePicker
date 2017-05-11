@@ -10,17 +10,20 @@ import java.util.Date;
 
 public class CalendarDay implements Serializable, Comparable<CalendarDay> {
     private static final long serialVersionUID = -5456695978688356202L;
+    private static final int HALF_OF_DAY = 12;
     private Calendar calendar;
 
     public int day;
     public int month;
     public int year;
+    public int hourdOfDay;
     public String tag;
 
     public CalendarDay(Calendar calendar, String tag) {
         year = calendar.get(Calendar.YEAR);
         month = calendar.get(Calendar.MONTH);
         day = calendar.get(Calendar.DAY_OF_MONTH);
+        hourdOfDay = calendar.get(Calendar.HOUR_OF_DAY);
         this.tag = tag;
     }
 
@@ -29,7 +32,11 @@ public class CalendarDay implements Serializable, Comparable<CalendarDay> {
     }
 
     public CalendarDay(int year, int month, int day) {
-        setDay(year, month, day);
+        setDay(year, month, day, 0);
+    }
+
+    public CalendarDay(int year, int month, int day, int hourdOfDay) {
+        setDay(year, month, day, hourdOfDay);
     }
 
     public CalendarDay(long timeInMillis) {
@@ -58,10 +65,11 @@ public class CalendarDay implements Serializable, Comparable<CalendarDay> {
         day = calendarDay.day;
     }
 
-    public void setDay(int year, int month, int day) {
+    public void setDay(int year, int month, int day, int hourdOfDay) {
         this.year = year;
         this.month = month;
         this.day = day;
+        this.hourdOfDay = hourdOfDay;
     }
 
     public Date getDate() {
@@ -86,6 +94,8 @@ public class CalendarDay implements Serializable, Comparable<CalendarDay> {
         stringBuilder.append(month);
         stringBuilder.append(", day: ");
         stringBuilder.append(day);
+        stringBuilder.append(", hour: ");
+        stringBuilder.append(hourdOfDay);
         stringBuilder.append(" }");
 
         return stringBuilder.toString();
@@ -139,5 +149,14 @@ public class CalendarDay implements Serializable, Comparable<CalendarDay> {
             }
         }
         return false;
+    }
+
+    public boolean isFirstHalfDay() {
+        return hourdOfDay <= HALF_OF_DAY;
+    }
+
+
+    public boolean isSecondHalfDay() {
+        return hourdOfDay > HALF_OF_DAY;
     }
 }
