@@ -8,4 +8,5 @@
     <dimen name="selected_day_radius">18dp</dimen>
     <dimen name="calendar_height">270dip</dimen>
     <dimen name="dayTopPadding">6dp</dimen>
+    <dimen name="today_border_width">1dp</dimen>
 </resources>

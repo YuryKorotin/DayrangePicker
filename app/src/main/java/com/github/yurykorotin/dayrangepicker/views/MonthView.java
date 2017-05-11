@@ -68,6 +68,8 @@ public class MonthView extends View{
 
     protected Paint mWeekTextPaint;
     protected Paint mDayTextPaint;
+    protected Paint mTodayFramePaint;
+
     protected Paint mTagTextPaint;
     protected Paint mTitleBGPaint;
     protected Paint mYearMonthPaint;
@@ -75,6 +77,8 @@ public class MonthView extends View{
     protected Paint mBusyDayBgPaint;
     protected Paint mInValidDayBgPaint;
     protected Paint mSelectedDayTextPaint;
+
+    ///Colors for calendar
     protected int mCurrentDayTextColor;
     protected int mYearMonthTextColor;
     protected int mWeekTextColor;
@@ -86,10 +90,11 @@ public class MonthView extends View{
     protected int mInValidDaysBgColor;
     protected int mBusyDaysTextColor;
     protected int mInValidDaysTextColor;
+    protected int mTodayBorderColor;
 
     private final StringBuilder mStringBuilder;
 
-    protected boolean mHasToday = false;
+    protected boolean mHasToday = true;
     protected int mToday = -1;
     protected int mWeekStart = 1;
     protected int mNumDays = 7;
@@ -177,6 +182,10 @@ public class MonthView extends View{
                 R.styleable.DayPickerView_inValidDaysTextColor,
                 ContextCompat.getColor(context, R.color.normal_day));
 //        mDrawRect = typedArray.getBoolean(R.styleable.DayPickerView_drawRoundRect, true);
+
+        mTodayBorderColor = typedArray.getColor(
+                R.styleable.DayPickerView_currentDayFrameColor,
+                Color.RED);
 
         mStringBuilder = new StringBuilder(50);
 
@@ -290,7 +299,7 @@ public class MonthView extends View{
 
             boolean isToday = false;
 
-            //drawToday(isToday, day, canvas, x, y);
+            drawToday(isToday, day, canvas, x, y);
 
             boolean isPrevDay = false;
             if (!isPrevDayEnabled && prevDay(day, today)) {
@@ -417,11 +426,14 @@ public class MonthView extends View{
     private void drawToday(boolean isToday, int day, Canvas canvas, int x, int y) {
         if (mHasToday && (mToday == day)) {
             isToday = true;
-            canvas.drawText(
+            /*canvas.drawText(
                     getResources().getString(R.string.today),
                     x,
                     getTextYCenter(mDayTextPaint, y - DAY_SELECTED_RECT_SIZE / 2),
-                    mDayTextPaint);
+                    mDayTextPaint);*/
+            RectF todayFrameRect = new RectF(x - DAY_SELECTED_RECT_SIZE, y - DAY_SELECTED_RECT_SIZE,
+                    x + DAY_SELECTED_RECT_SIZE, y + DAY_SELECTED_RECT_SIZE);
+            canvas.drawRect(todayFrameRect, mTodayFramePaint);
         }
     }
 
@@ -528,6 +540,14 @@ public class MonthView extends View{
         mTagTextPaint.setStyle(Paint.Style.FILL);
         mTagTextPaint.setTextAlign(Paint.Align.CENTER);
         mTagTextPaint.setFakeBoldText(false);
+
+
+        //TODO: Add thickness of border parameter to styleable
+        mTodayFramePaint = new Paint();
+        mTodayFramePaint.setAntiAlias(true);
+        mTodayFramePaint.setColor(mTodayBorderColor);
+        mTodayFramePaint.setStrokeWidth(getResources().getDimension(R.dimen.today_border_width));
+        mTodayFramePaint.setStyle(Paint.Style.STROKE);
     }
 
     @Override

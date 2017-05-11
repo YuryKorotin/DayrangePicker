@@ -21,6 +21,7 @@
         <attr name="selectedDaySize" format="dimension"/>
         <attr name="calendarViewHeight" format="dimension" />
         <attr name="enablePreviousDay" format="boolean" />
+        <attr name="todayBorderColor" format="color"/>
     </declare-styleable>
     <declare-styleable name="TabbedDayRangePicker">
         <attr name="startYear" format="integer"/>
