@@ -220,7 +220,7 @@ public class MonthView extends View{
 
         cellCalendar = new CalendarDay();
 
-        mTopDayPadding = getResources().getDimensionPixelOffset(R.dimen.dayTopPadding);
+        mTopDayPadding = MINI_DAY_NUMBER_TEXT_SIZE / 2;
 
         initView();
     }

@@ -23,6 +23,8 @@
         <attr name="enablePreviousDay" format="boolean" />
         <attr name="todayBorderColor" format="color"/>
     </declare-styleable>
+
+    <!-- TODO Add reference to tab style-->
     <declare-styleable name="TabbedDayRangePicker">
         <attr name="startYear" format="integer"/>
         <attr name="startMonth" format="integer"/>
@@ -32,4 +34,9 @@
         <attr name="tabSwitchEnabled" format="boolean"/>
         <attr name="tabStripColor" format="color"/>
     </declare-styleable>
+
+    <style name="DayTabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">20sp</item>
+        <item name="textAllCaps">false</item>
+    </style>
 </resources>
