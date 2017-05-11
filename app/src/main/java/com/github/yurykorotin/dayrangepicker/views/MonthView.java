@@ -61,6 +61,7 @@ public class MonthView extends View{
     private String mDefTag = "label";
 
     protected int mPadding = 0;
+    protected int mTopDayPadding = 0;
 
     private String mDayOfWeekTypeface;
     private String mMonthTitleTypeface;
@@ -210,6 +211,8 @@ public class MonthView extends View{
 
         cellCalendar = new CalendarDay();
 
+        mTopDayPadding = getResources().getDimensionPixelOffset(R.dimen.dayTopPadding);
+
         initView();
     }
 
@@ -270,6 +273,7 @@ public class MonthView extends View{
     }
 
     protected void drawMonthCell(Canvas canvas) {
+        //int y = MONTH_HEADER_SIZE + ROW_SEPARATOR + mRowHeight / 2;
         int y = MONTH_HEADER_SIZE + ROW_SEPARATOR + mRowHeight / 2;
         int paddingDay = (mWidth - 2 * mPadding) / (2 * mNumDays);
         int dayOffset = findDayOffset();
@@ -347,7 +351,6 @@ public class MonthView extends View{
                 }
             }
 
-            // 禁用的日期
             boolean isInvalidDays = false;
             for (CalendarDay calendarDay : mInvalidDays) {
 
@@ -646,6 +649,6 @@ public class MonthView extends View{
         Paint.FontMetrics fontMetrics = paint.getFontMetrics();
         float fontTotalHeight = fontMetrics.bottom - fontMetrics.top;
         float offY = fontTotalHeight / 2 - fontMetrics.bottom;
-        return y + offY;
+        return y + offY + mTopDayPadding;
     }
 }
