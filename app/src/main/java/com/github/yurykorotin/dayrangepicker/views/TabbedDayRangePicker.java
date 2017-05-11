@@ -3,9 +3,11 @@ package com.github.yurykorotin.dayrangepicker.views;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -114,6 +116,10 @@ public class TabbedDayRangePicker extends LinearLayout implements OnDaySelection
 
     private void setupTabs() {
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
+
+        int tabStripColor = mTabbedAttributesArray.getColor(
+                R.styleable.TabbedDayRangePicker_tabStripColor, Color.BLACK);
+        mTabLayout.setSelectedTabIndicatorColor(tabStripColor);
 
         mFirstDayTab = mTabLayout.newTab();
         mLastDayTab = mTabLayout.newTab();

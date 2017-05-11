@@ -29,5 +29,6 @@
         <attr name="firstDayTitle" format="string"/>
         <attr name="lastDayTitle" format="string"/>
         <attr name="tabSwitchEnabled" format="boolean"/>
+        <attr name="tabStripColor" format="color"/>
     </declare-styleable>
 </resources>

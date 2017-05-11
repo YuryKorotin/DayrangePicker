@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.view.MotionEvent;
@@ -140,30 +141,65 @@ public class MonthView extends View{
         today.setToNow();
         mDayOfWeekTypeface = resources.getString(R.string.sans_serif);
         mMonthTitleTypeface = resources.getString(R.string.sans_serif);
-        mCurrentDayTextColor = typedArray.getColor(R.styleable.DayPickerView_currentDayTextColor, resources.getColor(R.color.normal_day));
-        mYearMonthTextColor = typedArray.getColor(R.styleable.DayPickerView_yearMonthTextColor, resources.getColor(R.color.normal_day));
-        mWeekTextColor = typedArray.getColor(R.styleable.DayPickerView_weekTextColor, resources.getColor(R.color.normal_day));
+        mCurrentDayTextColor = typedArray.getColor(
+                R.styleable.DayPickerView_currentDayTextColor,
+                ContextCompat.getColor(context, R.color.normal_day));
+        mYearMonthTextColor = typedArray.getColor(
+                R.styleable.DayPickerView_yearMonthTextColor,
+                ContextCompat.getColor(context, R.color.normal_day));
+        mWeekTextColor = typedArray.getColor(
+                R.styleable.DayPickerView_weekTextColor,
+                ContextCompat.getColor(context, R.color.normal_day));
 //        mDayTextColor = typedArray.getColor(R.styleable.DayPickerView_colorDayName, resources.getColor(R.color.normal_day));
-        mDayTextColor = typedArray.getColor(R.styleable.DayPickerView_normalDayTextColor, resources.getColor(R.color.normal_day));
-        mPreviousDayTextColor = typedArray.getColor(R.styleable.DayPickerView_previousDayTextColor, resources.getColor(R.color.normal_day));
-        mSelectedDaysBgColor = typedArray.getColor(R.styleable.DayPickerView_selectedDayBackgroundColor, resources.getColor(R.color.selected_day_background));
-        mSelectedDayTextColor = typedArray.getColor(R.styleable.DayPickerView_selectedDayTextColor, resources.getColor(R.color.selected_day_text));
-        mBusyDaysBgColor = typedArray.getColor(R.styleable.DayPickerView_busyDaysBackgroundColor, Color.RED);
-        mInValidDaysBgColor = typedArray.getColor(R.styleable.DayPickerView_inValidDaysBackgroundColor, Color.GRAY);
-        mBusyDaysTextColor = typedArray.getColor(R.styleable.DayPickerView_busyDaysTextColor, resources.getColor(R.color.normal_day));
-        mInValidDaysTextColor = typedArray.getColor(R.styleable.DayPickerView_inValidDaysTextColor, resources.getColor(R.color.normal_day));
+        mDayTextColor = typedArray.getColor(
+                R.styleable.DayPickerView_normalDayTextColor,
+                ContextCompat.getColor(context, R.color.normal_day));
+        mPreviousDayTextColor = typedArray.getColor(
+                R.styleable.DayPickerView_previousDayTextColor,
+                ContextCompat.getColor(context, R.color.normal_day));
+        mSelectedDaysBgColor = typedArray.getColor(
+                R.styleable.DayPickerView_selectedDayBackgroundColor,
+                ContextCompat.getColor(context, R.color.selected_day_background));
+        mSelectedDayTextColor = typedArray.getColor(
+                R.styleable.DayPickerView_selectedDayTextColor,
+                ContextCompat.getColor(context, R.color.selected_day_text));
+        mBusyDaysBgColor = typedArray.getColor(
+                R.styleable.DayPickerView_busyDaysBackgroundColor,
+                Color.RED);
+        mInValidDaysBgColor = typedArray.getColor(
+                R.styleable.DayPickerView_inValidDaysBackgroundColor,
+                Color.GRAY);
+        mBusyDaysTextColor = typedArray.getColor(
+                R.styleable.DayPickerView_busyDaysTextColor,
+                ContextCompat.getColor(context, R.color.normal_day));
+        mInValidDaysTextColor = typedArray.getColor(
+                R.styleable.DayPickerView_inValidDaysTextColor,
+                ContextCompat.getColor(context, R.color.normal_day));
 //        mDrawRect = typedArray.getBoolean(R.styleable.DayPickerView_drawRoundRect, true);
 
         mStringBuilder = new StringBuilder(50);
 
-        MINI_DAY_NUMBER_TEXT_SIZE = typedArray.getDimensionPixelSize(R.styleable.DayPickerView_dayTextSize, resources.getDimensionPixelSize(R.dimen.text_size_day));
-        TAG_TEXT_SIZE = typedArray.getDimensionPixelSize(R.styleable.DayPickerView_tagTextSize, resources.getDimensionPixelSize(R.dimen.text_size_tag));
-        YEAR_MONTH_TEXT_SIZE = typedArray.getDimensionPixelSize(R.styleable.DayPickerView_yearMonthTextSize, resources.getDimensionPixelSize(R.dimen.text_size_month));
-        WEEK_TEXT_SIZE = typedArray.getDimensionPixelSize(R.styleable.DayPickerView_weekTextSize, resources.getDimensionPixelSize(R.dimen.text_size_day_name));
-        MONTH_HEADER_SIZE = typedArray.getDimensionPixelOffset(R.styleable.DayPickerView_headerMonthHeight, resources.getDimensionPixelOffset(R.dimen.header_month_height));
-        DAY_SELECTED_RECT_SIZE = typedArray.getDimensionPixelSize(R.styleable.DayPickerView_selectedDaySize, resources.getDimensionPixelOffset(R.dimen.selected_day_radius));
+        MINI_DAY_NUMBER_TEXT_SIZE = typedArray.getDimensionPixelSize(
+                R.styleable.DayPickerView_dayTextSize,
+                resources.getDimensionPixelSize(R.dimen.text_size_day));
+        TAG_TEXT_SIZE = typedArray.getDimensionPixelSize(
+                R.styleable.DayPickerView_tagTextSize,
+                resources.getDimensionPixelSize(R.dimen.text_size_tag));
+        YEAR_MONTH_TEXT_SIZE = typedArray.getDimensionPixelSize(
+                R.styleable.DayPickerView_yearMonthTextSize,
+                resources.getDimensionPixelSize(R.dimen.text_size_month));
+        WEEK_TEXT_SIZE = typedArray.getDimensionPixelSize(
+                R.styleable.DayPickerView_weekTextSize,
+                resources.getDimensionPixelSize(R.dimen.text_size_day_name));
+        MONTH_HEADER_SIZE = typedArray.getDimensionPixelOffset(
+                R.styleable.DayPickerView_headerMonthHeight,
+                resources.getDimensionPixelOffset(R.dimen.header_month_height));
+        DAY_SELECTED_RECT_SIZE = typedArray.getDimensionPixelSize(
+                R.styleable.DayPickerView_selectedDaySize,
+                resources.getDimensionPixelOffset(R.dimen.selected_day_radius));
 
-        mRowHeight = ((typedArray.getDimensionPixelSize(R.styleable.DayPickerView_calendarViewHeight,
+        mRowHeight = ((typedArray.getDimensionPixelSize(
+                R.styleable.DayPickerView_calendarViewHeight,
                 resources.getDimensionPixelOffset(R.dimen.calendar_height)) - MONTH_HEADER_SIZE - ROW_SEPARATOR) / 6);
 
         isPrevDayEnabled = typedArray.getBoolean(R.styleable.DayPickerView_enablePreviousDay, false);
