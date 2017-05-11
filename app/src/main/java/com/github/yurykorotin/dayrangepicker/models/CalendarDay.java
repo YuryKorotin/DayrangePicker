@@ -72,6 +72,13 @@ public class CalendarDay implements Serializable, Comparable<CalendarDay> {
         this.hourdOfDay = hourdOfDay;
     }
 
+    public void setDay(int year, int month, int day) {
+        this.year = year;
+        this.month = month;
+        this.day = day;
+        this.hourdOfDay = 0;
+    }
+
     public Date getDate() {
         if (calendar == null) {
             calendar = Calendar.getInstance();
