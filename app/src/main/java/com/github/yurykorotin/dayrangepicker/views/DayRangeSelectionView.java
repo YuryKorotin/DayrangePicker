@@ -133,8 +133,8 @@ public class DayRangeSelectionView extends RecyclerView {
     private void scrollToSelectedPosition(DaySelection<CalendarDay> selectedDays,
                                           int monthStart) {
         if (selectedDays != null && selectedDays.getFirst() != null &&
-                selectedDays.getFirst().month > monthStart) {
-            int position = selectedDays.getFirst().month - monthStart;
+                selectedDays.getFirst().getMonth() > monthStart) {
+            int position = selectedDays.getFirst().getMonth() - monthStart;
             scrollToPosition(position);
         }
     }

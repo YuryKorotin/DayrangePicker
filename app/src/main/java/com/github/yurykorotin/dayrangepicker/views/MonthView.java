@@ -267,7 +267,7 @@ public class MonthView extends View{
     }
 
     private void onDayClick(CalendarDay calendarDay) {
-        if (mOnDayClickListener != null && (isPrevDayEnabled || !prevDay(calendarDay.day, today))) {
+        if (mOnDayClickListener != null && (isPrevDayEnabled || !prevDay(calendarDay.getDay(), today))) {
             mOnDayClickListener.onDayClick(this, calendarDay);
         }
     }
@@ -402,7 +402,7 @@ public class MonthView extends View{
                 for (CalendarDay calendarDay : mCalendarTags) {
                     if (cellCalendar.equals(calendarDay)) {
                         isCalendarTag = true;
-                        canvas.drawText(calendarDay.tag, x, getTextYCenter(mTagTextPaint, y + DAY_SELECTED_RECT_SIZE / 2), mTagTextPaint);
+                        canvas.drawText(calendarDay.getTag(), x, getTextYCenter(mTagTextPaint, y + DAY_SELECTED_RECT_SIZE / 2), mTagTextPaint);
                     }
                 }
                 if (!isCalendarTag) {
@@ -459,7 +459,7 @@ public class MonthView extends View{
             }
         }
         if (!flag) {
-            calendar.tag = mDefTag;
+            calendar.setTag(mDefTag);
         }
         return calendar;
     }

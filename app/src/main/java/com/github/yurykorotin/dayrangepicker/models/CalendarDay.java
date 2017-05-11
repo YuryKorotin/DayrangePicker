@@ -13,18 +13,55 @@ public class CalendarDay implements Serializable, Comparable<CalendarDay> {
     private static final int HALF_OF_DAY = 12;
     private Calendar calendar;
 
-    public int day;
-    public int month;
-    public int year;
-    public int hourdOfDay;
-    public String tag;
+    private int mDay;
+    private int mMonth;
+    private int mYear;
+    private int mHourdOfDay;
+
+    public int getDay() {
+        return mDay;
+    }
+
+    public void setDay(int day) {
+        mDay = day;
+    }
+
+    public int getMonth() {
+        return mMonth;
+    }
+
+    public void setMonth(int month) {
+        mMonth = month;
+    }
+
+    public int getYear() {
+        return mYear;
+    }
+
+    public void setYear(int year) {
+        mYear = year;
+    }
+
+    public int getHourdOfDay() {
+        return mHourdOfDay;
+    }
+
+    public void setHourdOfDay(int hourdOfDay) {
+        mHourdOfDay = hourdOfDay;
+    }
+
+    public String getTag() {
+        return mTag;
+    }
+
+    private String mTag;
 
     public CalendarDay(Calendar calendar, String tag) {
-        year = calendar.get(Calendar.YEAR);
-        month = calendar.get(Calendar.MONTH);
-        day = calendar.get(Calendar.DAY_OF_MONTH);
-        hourdOfDay = calendar.get(Calendar.HOUR_OF_DAY);
-        this.tag = tag;
+        mYear = calendar.get(Calendar.YEAR);
+        mMonth = calendar.get(Calendar.MONTH);
+        mDay = calendar.get(Calendar.DAY_OF_MONTH);
+        mHourdOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+        this.mTag = tag;
     }
 
     public CalendarDay() {
@@ -44,9 +81,9 @@ public class CalendarDay implements Serializable, Comparable<CalendarDay> {
     }
 
     public CalendarDay(Calendar calendar) {
-        year = calendar.get(Calendar.YEAR);
-        month = calendar.get(Calendar.MONTH);
-        day = calendar.get(Calendar.DAY_OF_MONTH);
+        mYear = calendar.get(Calendar.YEAR);
+        mMonth = calendar.get(Calendar.MONTH);
+        mDay = calendar.get(Calendar.DAY_OF_MONTH);
     }
 
     private void setTime(long timeInMillis) {
@@ -54,29 +91,29 @@ public class CalendarDay implements Serializable, Comparable<CalendarDay> {
             calendar = Calendar.getInstance();
         }
         calendar.setTimeInMillis(timeInMillis);
-        month = this.calendar.get(Calendar.MONTH);
-        year = this.calendar.get(Calendar.YEAR);
-        day = this.calendar.get(Calendar.DAY_OF_MONTH);
+        mMonth = this.calendar.get(Calendar.MONTH);
+        mYear = this.calendar.get(Calendar.YEAR);
+        mDay = this.calendar.get(Calendar.DAY_OF_MONTH);
     }
 
     public void set(CalendarDay calendarDay) {
-        year = calendarDay.year;
-        month = calendarDay.month;
-        day = calendarDay.day;
+        mYear = calendarDay.mYear;
+        mMonth = calendarDay.mMonth;
+        mDay = calendarDay.mDay;
     }
 
     public void setDay(int year, int month, int day, int hourdOfDay) {
-        this.year = year;
-        this.month = month;
-        this.day = day;
-        this.hourdOfDay = hourdOfDay;
+        this.mYear = year;
+        this.mMonth = month;
+        this.mDay = day;
+        this.mHourdOfDay = hourdOfDay;
     }
 
     public void setDay(int year, int month, int day) {
-        this.year = year;
-        this.month = month;
-        this.day = day;
-        this.hourdOfDay = 0;
+        this.mYear = year;
+        this.mMonth = month;
+        this.mDay = day;
+        this.mHourdOfDay = 0;
     }
 
     public Date getDate() {
@@ -84,25 +121,25 @@ public class CalendarDay implements Serializable, Comparable<CalendarDay> {
             calendar = Calendar.getInstance();
         }
         calendar.clear();
-        calendar.set(year, month, day);
+        calendar.set(mYear, mMonth, mDay);
         return calendar.getTime();
     }
 
     public void setTag(String tag) {
-        this.tag = tag;
+        this.mTag = tag;
     }
 
     @Override
     public String toString() {
         final StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("{ year: ");
-        stringBuilder.append(year);
-        stringBuilder.append(", month: ");
-        stringBuilder.append(month);
-        stringBuilder.append(", day: ");
-        stringBuilder.append(day);
+        stringBuilder.append("{ mYear: ");
+        stringBuilder.append(mYear);
+        stringBuilder.append(", mMonth: ");
+        stringBuilder.append(mMonth);
+        stringBuilder.append(", mDay: ");
+        stringBuilder.append(mDay);
         stringBuilder.append(", hour: ");
-        stringBuilder.append(hourdOfDay);
+        stringBuilder.append(mHourdOfDay);
         stringBuilder.append(" }");
 
         return stringBuilder.toString();
@@ -112,16 +149,16 @@ public class CalendarDay implements Serializable, Comparable<CalendarDay> {
     public int compareTo(CalendarDay calendarDay) {
 //            return getDate().compareTo(calendarDay.getDate());
         if (calendarDay == null) {
-            throw new IllegalArgumentException("Calendar day is null");
+            throw new IllegalArgumentException("Calendar mDay is null");
         }
 
-        if (year == calendarDay.year && month == calendarDay.month && day == calendarDay.day) {
+        if (mYear == calendarDay.mYear && mMonth == calendarDay.mMonth && mDay == calendarDay.mDay) {
             return 0;
         }
 
-        if (year < calendarDay.year ||
-                (year == calendarDay.year && month < calendarDay.month) ||
-                (year == calendarDay.year && month == calendarDay.month && day < calendarDay.day)) {
+        if (mYear < calendarDay.mYear ||
+                (mYear == calendarDay.mYear && mMonth < calendarDay.mMonth) ||
+                (mYear == calendarDay.mYear && mMonth == calendarDay.mMonth && mDay < calendarDay.mDay)) {
             return -1;
         }
         return 1;
@@ -159,11 +196,11 @@ public class CalendarDay implements Serializable, Comparable<CalendarDay> {
     }
 
     public boolean isFirstHalfDay() {
-        return hourdOfDay <= HALF_OF_DAY;
+        return mHourdOfDay <= HALF_OF_DAY;
     }
 
 
     public boolean isSecondHalfDay() {
-        return hourdOfDay > HALF_OF_DAY;
+        return mHourdOfDay > HALF_OF_DAY;
     }
 }
