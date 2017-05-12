@@ -17,11 +17,13 @@ import android.view.View;
 import com.github.yurykorotin.dayrangepicker.R;
 import com.github.yurykorotin.dayrangepicker.Utils;
 import com.github.yurykorotin.dayrangepicker.models.CalendarDay;
+import com.github.yurykorotin.dayrangepicker.models.DaySelection;
 import com.github.yurykorotin.dayrangepicker.models.RangeModel;
 
 import java.security.InvalidParameterException;
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -54,8 +56,9 @@ public class MonthView extends View{
     protected static int WEEK_TEXT_SIZE;
 
 
-    private List<CalendarDay> mInvalidDays;
-    private List<CalendarDay> mBusyDays;
+    private DaySelection<CalendarDay> mInvalidDays;
+    private List<DaySelection<CalendarDay>> mBusyDays;
+    private DaySelection<CalendarDay> mSelectedDays;
     private CalendarDay mNearestDay;
     private List<CalendarDay> mCalendarTags;
     private String mDefTag = "label";
@@ -106,7 +109,7 @@ public class MonthView extends View{
 
     protected int mYear;
     protected int mMonth;
-    final Time today;
+    final Date today;
 
     private final Calendar mCalendar;
     private final Calendar mDayLabelCalendar;
@@ -143,8 +146,7 @@ public class MonthView extends View{
         Resources resources = context.getResources();
         mDayLabelCalendar = Calendar.getInstance();
         mCalendar = Calendar.getInstance();
-        today = new Time(Time.getCurrentTimezone());
-        today.setToNow();
+        today = new Date();
         mDayOfWeekTypeface = resources.getString(R.string.sans_serif);
         mMonthTitleTypeface = resources.getString(R.string.sans_serif);
         mCurrentDayTextColor = typedArray.getColor(
@@ -213,10 +215,11 @@ public class MonthView extends View{
                 resources.getDimensionPixelOffset(R.dimen.calendar_height)) - MONTH_HEADER_SIZE - ROW_SEPARATOR) / 6);
 
         isPrevDayEnabled = typedArray.getBoolean(R.styleable.DayPickerView_enablePreviousDay, false);
-        mInvalidDays = dataModel.invalidDays;
-        mBusyDays = dataModel.busyDays;
-        mCalendarTags = dataModel.tags;
-        mDefTag = dataModel.defTag;
+        mInvalidDays = dataModel.getInvalidDays();
+        mSelectedDays = dataModel.getSelectedDays();
+        mBusyDays = dataModel.getBusyDays();
+        mCalendarTags = dataModel.getTags();
+        mDefTag = dataModel.getDefTag();
 
         cellCalendar = new CalendarDay();
 
@@ -336,7 +339,9 @@ public class MonthView extends View{
             }
 
             boolean isBusyDay = false;
-            for (CalendarDay calendarDay : mBusyDays) {
+            mSelectedDays.getFirst();
+            for (CalendarDay calendarDay : mSelectedDays) {
+                calendarDay = calendarDay.next();
                 if (cellCalendar.equals(calendarDay) && !isPrevDay) {
                     isBusyDay = true;
                     RectF rectF = new RectF(x - DAY_SELECTED_RECT_SIZE,
@@ -361,8 +366,9 @@ public class MonthView extends View{
             }
 
             boolean isInvalidDays = false;
-            for (CalendarDay calendarDay : mInvalidDays) {
-
+            CalendarDay calendarDay = mInvalidDays.getFirst();
+            while (calendarDay.before(mInvalidDays.getLast())) {
+                calendarDay = calendarDay.
                 if (cellCalendar.equals(calendarDay) && !isPrevDay) {
                     isBusyDay = true;
 //                    RectF rectF = new RectF(x - DAY_SELECTED_RECT_SIZE,
@@ -574,20 +580,52 @@ public class MonthView extends View{
                 return true;
             }
 
-            for (CalendarDay day : mInvalidDays) {
-                if (calendarDay.equals(day) && !(mEndDate == null && mNearestDay != null && calendarDay.equals(mNearestDay))) {
-                    return true;
-                }
+            if (isInInvalidRange(calendarDay)) {
+                return true;
             }
 
-            for (CalendarDay day : mBusyDays) {
-                if (calendarDay.equals(day) && !(mEndDate == null && mNearestDay != null && calendarDay.equals(mNearestDay))) {
-                    return true;
-                }
+            if (isSelectedDayTouch(calendarDay)) {
+                return true;
             }
+
             onDayClick(calendarDay);
         }
         return true;
+    }
+
+    private boolean isInInvalidRange(CalendarDay calendarDay) {
+        boolean isInInvalidRange =
+                calendarDay.after(mInvalidDays.getFirst()) &&
+                        calendarDay.before(mInvalidDays.getLast());
+
+
+        if (isInInvalidRange && isNotNearestDay(calendarDay)) {
+                return true;
+        }
+
+        return false;
+    }
+
+    private boolean isNotNearestDay(CalendarDay calendarDay) {
+        boolean isNearest =
+                        mEndDate == null &&
+                        mNearestDay != null &&
+                        calendarDay.equals(mNearestDay);
+
+        return !isNearest;
+    }
+
+    private boolean isSelectedDayTouch(CalendarDay calendarDay) {
+
+        boolean isInSelectedRange =
+                calendarDay.after(mSelectedDays.getFirst()) &&
+                calendarDay.before(mSelectedDays.getLast());
+
+        if (isInSelectedRange && !isNotNearestDay(calendarDay)) {
+            return true;
+        }
+
+        return false;
     }
 
     public void reuse() {

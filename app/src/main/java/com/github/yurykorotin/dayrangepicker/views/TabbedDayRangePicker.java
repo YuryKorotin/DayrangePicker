@@ -108,8 +108,8 @@ public class TabbedDayRangePicker extends LinearLayout implements OnDaySelection
         inflate(mContext, R.layout.tabbed_picker, this);
 
         RangeModel dataModel = new RangeModel();
-        dataModel.leastDaysNum = 2;
-        dataModel.mostDaysNum = 100;
+        dataModel.setLeastDaysNum(2);
+        dataModel.setMostDaysNum(100);
 
         setupTabs();
     }

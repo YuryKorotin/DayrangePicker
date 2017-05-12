@@ -11,19 +11,99 @@ import java.util.List;
 public class RangeModel implements Serializable {
     
     public static int DEFAULT_MONTH_COUNT = 24;
-    public enum TYPE {TYPE_MULTI, TYPE_RANGE, TYPE_ONLY_READ}
+    //public enum TYPE {TYPE_MULTI, TYPE_RANGE, TYPE_ONLY_READ}
 
-    TYPE type;
-    public int yearStart = Calendar.getInstance().get(Calendar.YEAR);
-    public int monthStart = Calendar.getInstance().get(Calendar.MONTH);
-    public int monthCount = DEFAULT_MONTH_COUNT;
-    public List<CalendarDay> invalidDays;
-    public List<CalendarDay> busyDays;
-    public DaySelection<CalendarDay> selectedDays;
-    public int leastDaysNum;
-    public int mostDaysNum;
-    public List<CalendarDay> tags;
-    public String defTag;
-    public boolean displayTag;
+    //TYPE type;
+    private int mYearStart = Calendar.getInstance().get(Calendar.YEAR);
+    private int mMonthStart = Calendar.getInstance().get(Calendar.MONTH);
+    private int mMonthCount = DEFAULT_MONTH_COUNT;
+    private DaySelection<CalendarDay> mSelectedDays;
+    private DaySelection<CalendarDay> mInvalidDays;
+    private List<DaySelection<CalendarDay>> mBusyDays;
+    private int mLeastDaysNum;
+    private int mMostDaysNum;
+    private List<CalendarDay> mTags;
 
+    public int getYearStart() {
+        return mYearStart;
+    }
+
+    public void setYearStart(int yearStart) {
+        mYearStart = yearStart;
+    }
+
+    public int getMonthStart() {
+        return mMonthStart;
+    }
+
+    public void setMonthStart(int monthStart) {
+        mMonthStart = monthStart;
+    }
+
+    public int getMonthCount() {
+        return mMonthCount;
+    }
+
+    public void setMonthCount(int monthCount) {
+        mMonthCount = monthCount;
+    }
+
+    public DaySelection<CalendarDay> getSelectedDays() {
+        return mSelectedDays;
+    }
+
+    public void setSelectedDays(DaySelection<CalendarDay> selectedDays) {
+        mSelectedDays = selectedDays;
+    }
+
+    public DaySelection<CalendarDay> getInvalidDays() {
+        return mInvalidDays;
+    }
+
+    public void setInvalidDays(DaySelection<CalendarDay> invalidDays) {
+        mInvalidDays = invalidDays;
+    }
+
+    public List<DaySelection<CalendarDay>> getBusyDays() {
+        return mBusyDays;
+    }
+
+    public void setBusyDays(List<DaySelection<CalendarDay>> busyDays) {
+        mBusyDays = busyDays;
+    }
+
+    public int getLeastDaysNum() {
+        return mLeastDaysNum;
+    }
+
+    public void setLeastDaysNum(int leastDaysNum) {
+        mLeastDaysNum = leastDaysNum;
+    }
+
+    public int getMostDaysNum() {
+        return mMostDaysNum;
+    }
+
+    public void setMostDaysNum(int mostDaysNum) {
+        mMostDaysNum = mostDaysNum;
+    }
+
+    public List<CalendarDay> getTags() {
+        return mTags;
+    }
+
+    public void setTags(List<CalendarDay> tags) {
+        mTags = tags;
+    }
+
+    public String getDefTag() {
+        return mDefTag;
+    }
+
+    public void setDefTag(String defTag) {
+        mDefTag = defTag;
+    }
+
+    private String mDefTag;
+    //public boolean displayTag;
 }

@@ -11,6 +11,7 @@ import java.util.Date;
 public class CalendarDay implements Serializable, Comparable<CalendarDay> {
     private static final long serialVersionUID = -5456695978688356202L;
     private static final int HALF_OF_DAY = 12;
+    private static final int MAX_MONTH_COUNT = 12;
     private Calendar calendar;
 
     private int mDay;
@@ -97,9 +98,9 @@ public class CalendarDay implements Serializable, Comparable<CalendarDay> {
     }
 
     public void set(CalendarDay calendarDay) {
-        mYear = calendarDay.mYear;
-        mMonth = calendarDay.mMonth;
-        mDay = calendarDay.mDay;
+        mYear = calendarDay.getYear();
+        mMonth = calendarDay.getMonth();
+        mDay = calendarDay.getDay();
     }
 
     public void setDay(int year, int month, int day, int hourdOfDay) {
@@ -202,5 +203,14 @@ public class CalendarDay implements Serializable, Comparable<CalendarDay> {
 
     public boolean isSecondHalfDay() {
         return mHourdOfDay > HALF_OF_DAY;
+    }
+
+    public CalendarDay next() {
+
+
+        CalendarDay nextday = new CalendarDay();
+        if (getMonth() != MAX_MONTH_COUNT) {
+
+        }
     }
 }

@@ -59,14 +59,11 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         initData();
     }
 
-    /**
-     * 初始化数据
-     */
     private void initData() {
         calendar = Calendar.getInstance();
 
-        if (dataModel.invalidDays == null) {
-            dataModel.invalidDays = new ArrayList<>();
+        if (dataModel.getInvalidDays() == null) {
+            dataModel.setInvalidDays(new DaySelection<CalendarDay>());
         }
 
         if (dataModel.busyDays == null) {
@@ -88,7 +85,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
             dataModel.monthStart = calendar.get(Calendar.MONTH);
         }
 
-        if (dataModel.leastDaysNum <= 0) {
+        if (dataModel.getLeastDaysNum() <= 0) {
             dataModel.leastDaysNum = 0;
         }
 
@@ -132,8 +129,8 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         int month;
         int year;
 
-        int monthStart = dataModel.monthStart;
-        int yearStart = dataModel.yearStart;
+        int monthStart = dataModel.getMonthStart();
+        int yearStart = dataModel.getYearStart();
 
         month = (monthStart + (position % MONTHS_IN_YEAR)) % MONTHS_IN_YEAR;
         year = position / MONTHS_IN_YEAR + yearStart + ((monthStart + (position % MONTHS_IN_YEAR)) / MONTHS_IN_YEAR);
@@ -156,7 +153,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return dataModel.monthCount;
+        return dataModel.getMonthCount();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -324,7 +321,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
                 }
             }
             if (!isTag) {
-                calendarDay.tag = mDefTag;
+                calendarDay.setTag(mDefTag);
                 rangeDays.add(calendarDay);
             }
         }
