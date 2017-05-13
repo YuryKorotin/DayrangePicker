@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -15,7 +14,7 @@ import android.widget.LinearLayout;
 import com.github.yurykorotin.dayrangepicker.R;
 import com.github.yurykorotin.dayrangepicker.Utils;
 import com.github.yurykorotin.dayrangepicker.models.CalendarDay;
-import com.github.yurykorotin.dayrangepicker.models.RangeModel;
+import com.github.yurykorotin.dayrangepicker.models.CalendarConfig;
 
 import java.util.List;
 
@@ -77,7 +76,7 @@ public class TabbedDayRangePicker extends LinearLayout implements OnDaySelection
         init(context);
     }
 
-    public void setDataModel(RangeModel dataModel, DayRangePickerController controller) {
+    public void setDataModel(CalendarConfig dataModel, DayRangePickerController controller) {
         if (mDayRangeSelectionView != null) {
             mDayRangeSelectionView.setParameter(dataModel, controller);
         }
@@ -107,7 +106,7 @@ public class TabbedDayRangePicker extends LinearLayout implements OnDaySelection
 
         inflate(mContext, R.layout.tabbed_picker, this);
 
-        RangeModel dataModel = new RangeModel();
+        CalendarConfig dataModel = new CalendarConfig();
         dataModel.setLeastDaysNum(2);
         dataModel.setMostDaysNum(100);
 

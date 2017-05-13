@@ -7,9 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 
+import com.github.yurykorotin.dayrangepicker.models.CalendarData;
 import com.github.yurykorotin.dayrangepicker.models.CalendarDay;
 import com.github.yurykorotin.dayrangepicker.models.DaySelection;
-import com.github.yurykorotin.dayrangepicker.models.RangeModel;
+import com.github.yurykorotin.dayrangepicker.models.CalendarConfig;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -29,26 +30,14 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     private final TypedArray typedArray;
     private final Context mContext;
     private final DayRangePickerController mController;
-    private Calendar calendar;
-    private DaySelection<CalendarDay> rangeDays;
-
-    private List<CalendarDay> mBusyDays;
-    private List<CalendarDay> mTags;
-    private String mDefTag;
-
-    private int mLeastDaysNum;
-    private int mMostDaysNum;
-
-    private List<CalendarDay> mInvalidDays;
 
     private CalendarDay mNearestDay;
-
-    private RangeModel dataModel;
+    private CalendarData dataModel;
 
     public CalendarAdapter(Context context,
                               TypedArray typedArray,
                               DayRangePickerController datePickerController,
-                              RangeModel dataModel) {
+                              CalendarConfig dataModel) {
         mContext = context;
         this.typedArray = typedArray;
         mController = datePickerController;
@@ -60,8 +49,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     }
 
     private void initData() {
-        calendar = Calendar.getInstance();
-
         if (dataModel.getInvalidDays() == null) {
             dataModel.setInvalidDays(new DaySelection<CalendarDay>());
         }
@@ -176,7 +163,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     }
 
     /**
-     *
+     * On day tap callback method
      * @param calendarDay
      */
     protected void onDayTapped(CalendarDay calendarDay) {
@@ -332,7 +319,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
      *
      * @param dataModel
      */
-    protected void setDataModel(RangeModel dataModel) {
+    protected void setDataModel(CalendarConfig dataModel) {
         this.dataModel = dataModel;
     }
 }

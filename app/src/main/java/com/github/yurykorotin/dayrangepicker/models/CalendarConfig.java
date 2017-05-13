@@ -8,7 +8,7 @@ import java.util.List;
  * Created by yuri on 27.04.17.
  */
 
-public class RangeModel implements Serializable {
+public class CalendarConfig implements Serializable {
     
     public static int DEFAULT_MONTH_COUNT = 24;
     //public enum TYPE {TYPE_MULTI, TYPE_RANGE, TYPE_ONLY_READ}
@@ -17,12 +17,14 @@ public class RangeModel implements Serializable {
     private int mYearStart = Calendar.getInstance().get(Calendar.YEAR);
     private int mMonthStart = Calendar.getInstance().get(Calendar.MONTH);
     private int mMonthCount = DEFAULT_MONTH_COUNT;
+    private int mLeastDaysNum;
+    private int mMostDaysNum;
+    private String mDefTag;
     private DaySelection<CalendarDay> mSelectedDays;
     private DaySelection<CalendarDay> mInvalidDays;
     private List<DaySelection<CalendarDay>> mBusyDays;
-    private int mLeastDaysNum;
-    private int mMostDaysNum;
     private List<CalendarDay> mTags;
+
 
     public int getYearStart() {
         return mYearStart;
@@ -46,6 +48,30 @@ public class RangeModel implements Serializable {
 
     public void setMonthCount(int monthCount) {
         mMonthCount = monthCount;
+    }
+
+    public int getLeastDaysNum() {
+        return mLeastDaysNum;
+    }
+
+    public void setLeastDaysNum(int leastDaysNum) {
+        mLeastDaysNum = leastDaysNum;
+    }
+
+    public int getMostDaysNum() {
+        return mMostDaysNum;
+    }
+
+    public void setMostDaysNum(int mostDaysNum) {
+        mMostDaysNum = mostDaysNum;
+    }
+
+    public String getDefTag() {
+        return mDefTag;
+    }
+
+    public void setDefTag(String defTag) {
+        mDefTag = defTag;
     }
 
     public DaySelection<CalendarDay> getSelectedDays() {
@@ -72,22 +98,6 @@ public class RangeModel implements Serializable {
         mBusyDays = busyDays;
     }
 
-    public int getLeastDaysNum() {
-        return mLeastDaysNum;
-    }
-
-    public void setLeastDaysNum(int leastDaysNum) {
-        mLeastDaysNum = leastDaysNum;
-    }
-
-    public int getMostDaysNum() {
-        return mMostDaysNum;
-    }
-
-    public void setMostDaysNum(int mostDaysNum) {
-        mMostDaysNum = mostDaysNum;
-    }
-
     public List<CalendarDay> getTags() {
         return mTags;
     }
@@ -95,15 +105,4 @@ public class RangeModel implements Serializable {
     public void setTags(List<CalendarDay> tags) {
         mTags = tags;
     }
-
-    public String getDefTag() {
-        return mDefTag;
-    }
-
-    public void setDefTag(String defTag) {
-        mDefTag = defTag;
-    }
-
-    private String mDefTag;
-    //public boolean displayTag;
 }

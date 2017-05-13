@@ -10,7 +10,7 @@ import android.util.AttributeSet;
 import com.github.yurykorotin.dayrangepicker.R;
 import com.github.yurykorotin.dayrangepicker.models.CalendarDay;
 import com.github.yurykorotin.dayrangepicker.models.DaySelection;
-import com.github.yurykorotin.dayrangepicker.models.RangeModel;
+import com.github.yurykorotin.dayrangepicker.models.CalendarConfig;
 
 import java.util.Calendar;
 
@@ -63,7 +63,7 @@ public class DayRangeSelectionView extends RecyclerView {
     private TypedArray typedArray;
     private OnScrollListener onScrollListener;
 
-    private RangeModel mDataModel;
+    private CalendarConfig mDataModel;
 
     public DayRangeSelectionView(Context context) {
         this(context, null);
@@ -119,7 +119,7 @@ public class DayRangeSelectionView extends RecyclerView {
      * @param dataModel contains info of day ranges
      * @param controller callbacks the selection actions
      */
-    public void setParameter(RangeModel dataModel, DayRangePickerController controller) {
+    public void setParameter(CalendarConfig dataModel, DayRangePickerController controller) {
         if (dataModel == null) {
             return;
         }

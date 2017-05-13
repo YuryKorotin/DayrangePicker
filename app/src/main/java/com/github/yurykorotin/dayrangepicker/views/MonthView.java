@@ -18,7 +18,7 @@ import com.github.yurykorotin.dayrangepicker.R;
 import com.github.yurykorotin.dayrangepicker.Utils;
 import com.github.yurykorotin.dayrangepicker.models.CalendarDay;
 import com.github.yurykorotin.dayrangepicker.models.DaySelection;
-import com.github.yurykorotin.dayrangepicker.models.RangeModel;
+import com.github.yurykorotin.dayrangepicker.models.CalendarConfig;
 
 import java.security.InvalidParameterException;
 import java.text.DateFormatSymbols;
@@ -140,7 +140,7 @@ public class MonthView extends View{
         super(context, attrs, defStyleAttr, defStyleRes);
     }*/
 
-    public MonthView(Context context, TypedArray typedArray, RangeModel dataModel) {
+    public MonthView(Context context, TypedArray typedArray, CalendarConfig dataModel) {
         super(context);
 
         Resources resources = context.getResources();
@@ -410,9 +410,6 @@ public class MonthView extends View{
                         isCalendarTag = true;
                         canvas.drawText(calendarDay.getTag(), x, getTextYCenter(mTagTextPaint, y + DAY_SELECTED_RECT_SIZE / 2), mTagTextPaint);
                     }
-                }
-                if (!isCalendarTag) {
-                    //canvas.drawText(mDefTag, x, getTextYCenter(mTagTextPaint, y + DAY_SELECTED_RECT_SIZE / 2), mTagTextPaint);
                 }
             }
 

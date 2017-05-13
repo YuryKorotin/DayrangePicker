@@ -1,5 +1,7 @@
 package com.github.yurykorotin.dayrangepicker.models;
 
+import android.support.annotation.IntDef;
+
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
@@ -12,7 +14,25 @@ public class CalendarDay implements Serializable, Comparable<CalendarDay> {
     private static final long serialVersionUID = -5456695978688356202L;
     private static final int HALF_OF_DAY = 12;
     private static final int MAX_MONTH_COUNT = 12;
+    private @DayType int mType;
+
     private Calendar calendar;
+
+    public @DayType int getType() {
+        return mType;
+    }
+
+    public void setType(@DayType int type) {
+        mType = type;
+    }
+
+    @IntDef({BUSY_TYPE, SELECTED_TYPE, DISABLED_TYPE})
+
+    public @interface DayType{}
+
+    public static final int BUSY_TYPE = 0;
+    public static final int SELECTED_TYPE = 1;
+    public static final int DISABLED_TYPE = 2;
 
     private int mDay;
     private int mMonth;
@@ -203,14 +223,5 @@ public class CalendarDay implements Serializable, Comparable<CalendarDay> {
 
     public boolean isSecondHalfDay() {
         return mHourdOfDay > HALF_OF_DAY;
-    }
-
-    public CalendarDay next() {
-
-
-        CalendarDay nextday = new CalendarDay();
-        if (getMonth() != MAX_MONTH_COUNT) {
-
-        }
     }
 }
