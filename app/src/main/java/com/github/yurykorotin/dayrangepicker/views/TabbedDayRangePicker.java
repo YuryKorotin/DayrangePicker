@@ -15,6 +15,7 @@ import com.github.yurykorotin.dayrangepicker.R;
 import com.github.yurykorotin.dayrangepicker.Utils;
 import com.github.yurykorotin.dayrangepicker.models.CalendarDay;
 import com.github.yurykorotin.dayrangepicker.models.CalendarConfig;
+import com.github.yurykorotin.dayrangepicker.models.DaySelection;
 
 import java.util.List;
 
@@ -56,11 +57,11 @@ public class TabbedDayRangePicker extends LinearLayout implements OnDaySelection
         }
 
         @Override
-        protected void onDateRangeSelected(List<CalendarDay> selectedDays) {
+        protected void onDateRangeSelected(DaySelection<CalendarDay> selectedDays) {
         }
 
         @Override
-        protected void onDaysSelected(List<CalendarDay> seleDaysList) {
+        protected void onDaysSelected(List<CalendarDay> selectedDaysList) {
 
         }
 

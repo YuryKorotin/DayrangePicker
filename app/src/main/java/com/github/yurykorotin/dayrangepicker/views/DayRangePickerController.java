@@ -5,6 +5,7 @@ package com.github.yurykorotin.dayrangepicker.views;
  */
 
 import com.github.yurykorotin.dayrangepicker.models.CalendarDay;
+import com.github.yurykorotin.dayrangepicker.models.DaySelection;
 
 import java.util.List;
 
@@ -42,7 +43,7 @@ public abstract class DayRangePickerController {
         }
     }
 
-    protected abstract void onDateRangeSelected(List<CalendarDay> selectedDays);
+    protected abstract void onDateRangeSelected(DaySelection<CalendarDay> selectedDays);
 
     protected abstract void onDaysSelected(List<CalendarDay> seleDaysList);
 

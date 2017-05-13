@@ -27,85 +27,32 @@ import java.util.List;
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHolder> implements MonthView.OnDayClickListener {
     protected static final int MONTHS_IN_YEAR = 12;
 
-    private final TypedArray typedArray;
+    private final TypedArray mTypedArray;
     private final Context mContext;
     private final DayRangePickerController mController;
+    private final Calendar mCalendar;
 
     private CalendarDay mNearestDay;
-    private CalendarData dataModel;
+    private CalendarData mDataModel;
 
     public CalendarAdapter(Context context,
                               TypedArray typedArray,
                               DayRangePickerController datePickerController,
-                              CalendarConfig dataModel) {
+                              CalendarData dataModel) {
         mContext = context;
-        this.typedArray = typedArray;
+        mCalendar = Calendar.getInstance();
+        mTypedArray = typedArray;
         mController = datePickerController;
-        this.dataModel = dataModel;
+        mDataModel = dataModel;
 
-//        if (typedArray.getBoolean(R.styleable.DayPickerView_currentDaySelected, false))
+//        if (mTypedArray.getBoolean(R.styleable.DayPickerView_currentDaySelected, false))
 //            onDayTapped(new CalendarDay(System.currentTimeMillis()));
-        initData();
     }
 
-    private void initData() {
-        if (dataModel.getInvalidDays() == null) {
-            dataModel.setInvalidDays(new DaySelection<CalendarDay>());
-        }
-
-        if (dataModel.busyDays == null) {
-            dataModel.busyDays = new ArrayList<>();
-        }
-
-        if (dataModel.tags == null) {
-            dataModel.tags = new ArrayList<>();
-        }
-
-        if (dataModel.selectedDays == null) {
-            dataModel.selectedDays = new DaySelection<>();
-        }
-
-        if (dataModel.yearStart <= 0) {
-            dataModel.yearStart = calendar.get(Calendar.YEAR);
-        }
-        if (dataModel.monthStart <= 0) {
-            dataModel.monthStart = calendar.get(Calendar.MONTH);
-        }
-
-        if (dataModel.getLeastDaysNum() <= 0) {
-            dataModel.leastDaysNum = 0;
-        }
-
-        if (dataModel.mostDaysNum <= 0) {
-            dataModel.mostDaysNum = 100;
-        }
-
-        if (dataModel.leastDaysNum > dataModel.mostDaysNum) {
-            //Log.e("error", "可选择的最小天数不能小于最大天数");
-            //throw new IllegalArgumentException("可选择的最小天数不能小于最大天数");
-        }
-
-        if(dataModel.monthCount <= 0) {
-            dataModel.monthCount = 12;
-        }
-
-        if(dataModel.defTag == null) {
-            dataModel.defTag = "label";
-        }
-
-        mLeastDaysNum = dataModel.leastDaysNum;
-        mMostDaysNum = dataModel.mostDaysNum;
-
-        mBusyDays = dataModel.busyDays;
-        mInvalidDays = dataModel.invalidDays;
-        rangeDays = dataModel.selectedDays;
-        mTags = dataModel.tags;
-        mDefTag = dataModel.defTag;
-    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        final MonthView simpleMonthView = new MonthView(mContext, typedArray, dataModel);
+        final MonthView simpleMonthView = new MonthView(mContext, mTypedArray, mDataModel);
         return new ViewHolder(simpleMonthView, this);
     }
 
@@ -116,20 +63,20 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         int month;
         int year;
 
-        int monthStart = dataModel.getMonthStart();
-        int yearStart = dataModel.getYearStart();
+        int monthStart = mDataModel.getMonthStart();
+        int yearStart = mDataModel.getYearStart();
 
         month = (monthStart + (position % MONTHS_IN_YEAR)) % MONTHS_IN_YEAR;
         year = position / MONTHS_IN_YEAR + yearStart + ((monthStart + (position % MONTHS_IN_YEAR)) / MONTHS_IN_YEAR);
 
 //        v.reuse();
 
-        drawingParams.put(MonthView.VIEW_PARAMS_SELECTED_BEGIN_DATE, rangeDays.getFirst());
-        drawingParams.put(MonthView.VIEW_PARAMS_SELECTED_LAST_DATE, rangeDays.getLast());
+        drawingParams.put(MonthView.VIEW_PARAMS_SELECTED_BEGIN_DATE, mDataModel.getRangeDays().getFirst());
+        drawingParams.put(MonthView.VIEW_PARAMS_SELECTED_LAST_DATE, mDataModel.getRangeDays().getLast());
         drawingParams.put(MonthView.VIEW_PARAMS_NEAREST_DATE, mNearestDay);
         drawingParams.put(MonthView.VIEW_PARAMS_YEAR, year);
         drawingParams.put(MonthView.VIEW_PARAMS_MONTH, month);
-        drawingParams.put(MonthView.VIEW_PARAMS_WEEK_START, calendar.getFirstDayOfWeek());
+        drawingParams.put(MonthView.VIEW_PARAMS_WEEK_START, mCalendar.getFirstDayOfWeek());
         v.setMonthParams(drawingParams);
         v.invalidate();
     }
@@ -140,7 +87,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return dataModel.getMonthCount();
+        return mDataModel.getMonthCount();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -178,35 +125,40 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
      * @param calendarDay
      */
     public void setRangeSelectedDay(CalendarDay calendarDay) {
-        if (rangeDays.getFirst() != null && rangeDays.getLast() == null) {
-            mNearestDay = getNearestDay(rangeDays.getFirst());
-            if (isContainSpecialDays(rangeDays.getFirst(), calendarDay, mBusyDays)) {
+        DaySelection<CalendarDay> rangeDays = mDataModel.getRangeDays();
+
+        CalendarDay firstRangeDay= rangeDays.getFirst();
+        CalendarDay lastRangeDay = rangeDays.getLast();
+
+        if (firstRangeDay != null && lastRangeDay == null) {
+            mNearestDay = getNearestDay(firstRangeDay);
+            if (isContainSpecialDays(firstRangeDay, calendarDay, mDataModel.getBusyDays())) {
                 if(mController != null) {
                     mController.alertSelectedFail(DayRangePickerController.FailEven.CONTAIN_NO_SELECTED);
                 }
                 return;
             }
-            if (isContainSpecialDays(rangeDays.getFirst(), calendarDay, mInvalidDays)) {
+            if (isContainSpecialDays(firstRangeDay, calendarDay, mDataModel.getInvalidDays())) {
                 if(mController != null) {
                     mController.alertSelectedFail(DayRangePickerController.FailEven.CONTAIN_INVALID);
                 }
                 return;
             }
-            if (calendarDay.getDate().before(rangeDays.getFirst().getDate())) {
+            if (calendarDay.getDate().before(firstRangeDay.getDate())) {
                 if(mController != null) {
                     mController.alertSelectedFail(DayRangePickerController.FailEven.END_MT_START);
                 }
                 return;
             }
 
-            int dayDiff = dateDiff(rangeDays.getFirst(), calendarDay);
-            if (dayDiff > 1 && mLeastDaysNum > dayDiff) {
+            int dayDiff = dateDiff(firstRangeDay, calendarDay);
+            if (dayDiff > 1 && mDataModel.getLeastDaysNum() > dayDiff) {
                 if(mController != null) {
                     mController.alertSelectedFail(DayRangePickerController.FailEven.NO_REACH_LEAST_DAYS);
                 }
                 return;
             }
-            if (dayDiff > 1 && mMostDaysNum < dayDiff) {
+            if (dayDiff > 1 && mDataModel.getMostDaysNum() < dayDiff) {
                 if(mController != null) {
                     mController.alertSelectedFail(DayRangePickerController.FailEven.NO_REACH_MOST_DAYS);
                 }
@@ -216,7 +168,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
             rangeDays.setLast(calendarDay);
 
             if(mController != null) {
-                mController.onDateRangeSelected(addSelectedDays());
+                mController.onDateRangeSelected(mDataModel.getRangeDays());
                 mController.onEndDaySelected(calendarDay);
             }
         } else if (rangeDays.getLast() != null) {
@@ -240,8 +192,8 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
      */
     protected CalendarDay getNearestDay(CalendarDay calendarDay) {
         List<CalendarDay> list = new ArrayList<>();
-        list.addAll(mBusyDays);
-        list.addAll(mInvalidDays);
+        list.addAll(mDataModel.getBusyDays());
+        list.addAll(mDataModel.getInvalidDays());
         Collections.sort(list);
         for (CalendarDay day : list) {
             if (calendarDay.compareTo(day) < 0) {
@@ -252,7 +204,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     }
 
     public DaySelection<CalendarDay> getRangeDays() {
-        return rangeDays;
+        return mDataModel.getRangeDays();
     }
 
     /**
@@ -262,7 +214,9 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
      * @param specialDays
      * @return
      */
-    protected boolean isContainSpecialDays(CalendarDay first, CalendarDay last, List<CalendarDay> specialDays) {
+    protected boolean isContainSpecialDays(CalendarDay first,
+                                           CalendarDay last,
+                                           List<CalendarDay> specialDays) {
         Date firstDay = first.getDate();
         Date lastDay = last.getDate();
         for (CalendarDay day : specialDays) {
@@ -283,44 +237,12 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         long dayDiff = (last.getDate().getTime() - first.getDate().getTime()) / (1000 * 3600 * 24);
         return Integer.valueOf(String.valueOf(dayDiff)) + 1;
     }
-
-    /**
-     *
-     * @return
-     */
-    protected List<CalendarDay> addSelectedDays() {
-        List<CalendarDay> rangeDays = new ArrayList<>();
-        CalendarDay firstDay = this.rangeDays.getFirst();
-        CalendarDay lastDay = this.rangeDays.getLast();
-        rangeDays.add(firstDay);
-        int diffDays = dateDiff(firstDay, lastDay);
-        Calendar tempCalendar = Calendar.getInstance();
-        tempCalendar.setTime(firstDay.getDate());
-        for (int i = 1; i < diffDays; i++) {
-            tempCalendar.set(Calendar.DATE, tempCalendar.get(Calendar.DATE) + 1);
-            CalendarDay calendarDay = new CalendarDay(tempCalendar);
-            boolean isTag = false;
-            for (CalendarDay calendarTag : mTags) {
-                if (calendarDay.compareTo(calendarTag) == 0) {
-                    isTag = true;
-                    rangeDays.add(calendarTag);
-                    break;
-                }
-            }
-            if (!isTag) {
-                calendarDay.setTag(mDefTag);
-                rangeDays.add(calendarDay);
-            }
-        }
-        return rangeDays;
-    }
-
     /**
      *
      * @param dataModel
      */
-    protected void setDataModel(CalendarConfig dataModel) {
-        this.dataModel = dataModel;
+    protected void setDataModel(CalendarData dataModel) {
+        this.mDataModel = dataModel;
     }
 }
 

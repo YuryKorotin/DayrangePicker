@@ -16,6 +16,7 @@ import android.view.View;
 
 import com.github.yurykorotin.dayrangepicker.R;
 import com.github.yurykorotin.dayrangepicker.Utils;
+import com.github.yurykorotin.dayrangepicker.models.CalendarData;
 import com.github.yurykorotin.dayrangepicker.models.CalendarDay;
 import com.github.yurykorotin.dayrangepicker.models.DaySelection;
 import com.github.yurykorotin.dayrangepicker.models.CalendarConfig;
@@ -55,13 +56,8 @@ public class MonthView extends View{
     protected static int YEAR_MONTH_TEXT_SIZE;
     protected static int WEEK_TEXT_SIZE;
 
-
-    private DaySelection<CalendarDay> mInvalidDays;
-    private List<DaySelection<CalendarDay>> mBusyDays;
-    private DaySelection<CalendarDay> mSelectedDays;
+    private final CalendarData mDataModel;
     private CalendarDay mNearestDay;
-    private List<CalendarDay> mCalendarTags;
-    private String mDefTag = "label";
 
     protected int mPadding = 0;
     protected int mTopDayPadding = 0;
@@ -140,7 +136,7 @@ public class MonthView extends View{
         super(context, attrs, defStyleAttr, defStyleRes);
     }*/
 
-    public MonthView(Context context, TypedArray typedArray, CalendarConfig dataModel) {
+    public MonthView(Context context, TypedArray typedArray, CalendarData dataModel) {
         super(context);
 
         Resources resources = context.getResources();
@@ -215,15 +211,11 @@ public class MonthView extends View{
                 resources.getDimensionPixelOffset(R.dimen.calendar_height)) - MONTH_HEADER_SIZE - ROW_SEPARATOR) / 6);
 
         isPrevDayEnabled = typedArray.getBoolean(R.styleable.DayPickerView_enablePreviousDay, false);
-        mInvalidDays = dataModel.getInvalidDays();
-        mSelectedDays = dataModel.getSelectedDays();
-        mBusyDays = dataModel.getBusyDays();
-        mCalendarTags = dataModel.getTags();
-        mDefTag = dataModel.getDefTag();
-
         cellCalendar = new CalendarDay();
 
         mTopDayPadding = MINI_DAY_NUMBER_TEXT_SIZE / 2;
+
+        mDataModel = dataModel;
 
         initView();
     }
@@ -402,17 +394,6 @@ public class MonthView extends View{
                 }
             }
 
-            // 绘制标签
-            if (!isPrevDay && !isInvalidDays && !isBusyDay && !isBeginDay && !isLastDay) {
-                boolean isCalendarTag = false;
-                for (CalendarDay calendarDay : mCalendarTags) {
-                    if (cellCalendar.equals(calendarDay)) {
-                        isCalendarTag = true;
-                        canvas.drawText(calendarDay.getTag(), x, getTextYCenter(mTagTextPaint, y + DAY_SELECTED_RECT_SIZE / 2), mTagTextPaint);
-                    }
-                }
-            }
-
             if (!isToday && !isPrevDay && !isInvalidDays && !isBusyDay) {
                 canvas.drawText(String.format("%d", day), x, getTextYCenter(mTagTextPaint, y - DAY_SELECTED_RECT_SIZE / 2), mDayTextPaint);
             }
@@ -453,17 +434,6 @@ public class MonthView extends View{
             return null;
 
         CalendarDay calendar = new CalendarDay(mYear, mMonth, day);
-
-        boolean flag = false;
-        for (CalendarDay calendarTag : mCalendarTags) {
-            if (calendarTag.compareTo(calendar) == 0) {
-                flag = true;
-                calendar = calendarTag;
-            }
-        }
-        if (!flag) {
-            calendar.setTag(mDefTag);
-        }
         return calendar;
     }
 
@@ -615,8 +585,8 @@ public class MonthView extends View{
     private boolean isSelectedDayTouch(CalendarDay calendarDay) {
 
         boolean isInSelectedRange =
-                calendarDay.after(mSelectedDays.getFirst()) &&
-                calendarDay.before(mSelectedDays.getLast());
+                calendarDay.after(mDataModel.getRangeDays().getFirst()) &&
+                calendarDay.before(mDataModel.getRangeDays().getLast());
 
         if (isInSelectedRange && !isNotNearestDay(calendarDay)) {
             return true;

@@ -31,7 +31,6 @@ public class CalendarDataBuilder {
     }
 
     public void setBusyDaySelections(List<DaySelection<CalendarDay>> busyDaySelections) {
-
         mBusyDaySelections = busyDaySelections;
     }
 
@@ -46,7 +45,10 @@ public class CalendarDataBuilder {
                 .setDaySelection(mInvalidDaySelection)
                 .build();
 
-        mCalendarData.(invalidDays);
+        mCalendarData.setInvalidDays(invalidDays);
+
+
+        //mCalendarData(invalidDays);
 
 
         if (dataModel.monthStart <= 0) {

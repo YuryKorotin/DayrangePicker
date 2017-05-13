@@ -22,7 +22,7 @@ public class CalendarDayRangeBuilder {
     }
 
     public List<CalendarDay> build() {
-        int dayType = getDayType();
+        @CalendarDay.DayType int dayType = getDayType();
 
         List<CalendarDay> rangeDays = new ArrayList<>();
         CalendarDay firstDay = mDaySelection.getFirst();
