@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 
 public class StartActivity extends AppCompatActivity {
     private final static String LOG_TAG = "DAY_RANGE_PICKER";
@@ -30,7 +31,7 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private void loadConfig() {
-        String calendarConfigFileName = "day_range_picker_config.json";
+        /*String calendarConfigFileName = "day_range_picker_config.json";
 
         try {
             CalendarConfigBuilder builder = new CalendarConfigBuilder();
@@ -47,6 +48,20 @@ public class StartActivity extends AppCompatActivity {
             Log.e(LOG_TAG,"failed to load calendar config");
         } catch (JSONException e) {
             Log.e(LOG_TAG,"failed to parsejson");
-        }
+        }*/
+
+        Date startDate = new Date();
+
+        CalendarConfigBuilder builder = new CalendarConfigBuilder();
+        builder
+                .setMonthCount(12)
+                .setLeastDaysNum(2)
+                .setMostDaysNum(20);
+                //.setInvalidRange()
+                //.addBusyRange();
+
+        CalendarConfig config = builder.build();
+
+        mDayRangePicker.setDataModel(config, new TabbedDayRangePicker.DayRangeController(mDayRangePicker));
     }
 }
