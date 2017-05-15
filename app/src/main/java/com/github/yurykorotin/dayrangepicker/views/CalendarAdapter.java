@@ -132,13 +132,13 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
 
         if (firstRangeDay != null && lastRangeDay == null) {
             mNearestDay = getNearestDay(firstRangeDay);
-            if (isContainSpecialDays(firstRangeDay, calendarDay, mDataModel.getBusyDays())) {
+            if (isContainSpecialDays(firstRangeDay, calendarDay, mDataModel.getBusyDayCollection())) {
                 if(mController != null) {
                     mController.alertSelectedFail(DayRangePickerController.FailEven.CONTAIN_NO_SELECTED);
                 }
                 return;
             }
-            if (isContainSpecialDays(firstRangeDay, calendarDay, mDataModel.getInvalidDays())) {
+            if (isContainSpecialDays(firstRangeDay, calendarDay, mDataModel.getInvalidDayCollection())) {
                 if(mController != null) {
                     mController.alertSelectedFail(DayRangePickerController.FailEven.CONTAIN_INVALID);
                 }
@@ -192,9 +192,9 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
      */
     protected CalendarDay getNearestDay(CalendarDay calendarDay) {
         List<CalendarDay> list = new ArrayList<>();
-        list.addAll(mDataModel.getBusyDays());
-        list.addAll(mDataModel.getInvalidDays());
-        Collections.sort(list);
+        list.addAll(mDataModel.getBusyDayCollection());
+        list.addAll(mDataModel.getInvalidDayCollection());
+        //Collections.sort(list);
         for (CalendarDay day : list) {
             if (calendarDay.compareTo(day) < 0) {
                 return day;

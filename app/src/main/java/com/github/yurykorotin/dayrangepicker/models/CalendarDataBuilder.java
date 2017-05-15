@@ -9,6 +9,7 @@ import java.util.List;
  */
 
 public class CalendarDataBuilder {
+    private final Calendar mCalendar;
     private CalendarConfig mCalendarConfig;
     private final CalendarData mCalendarData;
 
@@ -16,6 +17,8 @@ public class CalendarDataBuilder {
     private List<DaySelection<CalendarDay>> mBusyDaySelections;
 
     public CalendarDataBuilder() {
+        mCalendar = Calendar.getInstance();
+
         mCalendarData = new CalendarData();
     }
 
@@ -25,8 +28,15 @@ public class CalendarDataBuilder {
         return this;
     }
 
-    public CalendarDataBuilder setInvalidDaySelection(DaySelection<CalendarDay> invalidDaySelection) {
+    public CalendarDataBuilder setInvalidDaySelection(CalendarDay firstInvalidDay,
+                                                      CalendarDay lastInvalidDay) {
+        DaySelection<CalendarDay> invalidDaySelection = new DaySelection<>();
+        invalidDaySelection.setFirst(firstInvalidDay);
+        invalidDaySelection.setLast(lastInvalidDay);
+        invalidDaySelection.setType(DaySelection.DISABLED_TYPE);
+
         mInvalidDaySelection = invalidDaySelection;
+
         return this;
     }
 
@@ -35,55 +45,57 @@ public class CalendarDataBuilder {
     }
 
     public CalendarData build() {
-
         List<CalendarDay> invalidDays = new ArrayList<>();
         List<CalendarDay> busyDays = new ArrayList<>();
 
         CalendarDayRangeBuilder dayRangeBuilder = new CalendarDayRangeBuilder();
 
+        mCalendarData.setInvalidDays(mInvalidDaySelection);
+        mCalendarData.setBusyDays(mBusyDaySelections);
+
         invalidDays = dayRangeBuilder
                 .setDaySelection(mInvalidDaySelection)
                 .build();
 
-        mCalendarData.setInvalidDays(invalidDays);
+        mCalendarData.setInvalidDayCollection(invalidDays);
 
-
-        //mCalendarData(invalidDays);
-
-
-        if (dataModel.monthStart <= 0) {
-            dataModel.monthStart = calendar.get(Calendar.MONTH);
+        for (DaySelection daySelection : mBusyDaySelections) {
+            busyDays.addAll(dayRangeBuilder
+                    .setDaySelection(daySelection)
+                    .build());
         }
 
-        if (dataModel.getLeastDaysNum() <= 0) {
-            dataModel.leastDaysNum = 0;
+        mCalendarData.setBusyDayCollection(busyDays);
+
+        mCalendarData.setYearStart(mCalendarConfig.getYearStart());
+
+        if (mCalendarConfig.getMonthStart() <= 0) {
+            mCalendarData.setMonthStart(mCalendar.get(Calendar.MONTH));
+        } else {
+            mCalendarData.setMonthStart(mCalendarConfig.getMonthStart());
         }
 
-        if (dataModel.mostDaysNum <= 0) {
-            dataModel.mostDaysNum = 100;
+        if (mCalendarConfig.getLeastDaysNum() <= 0) {
+            mCalendarData.setLeastDaysNum(0);
+        } else {
+            mCalendarData.setLeastDaysNum(mCalendarConfig.getLeastDaysNum());
         }
 
-        if (dataModel.leastDaysNum > dataModel.mostDaysNum) {
-            //Log.e("error", "可选择的最小天数不能小于最大天数");
-            //throw new IllegalArgumentException("可选择的最小天数不能小于最大天数");
+        if (mCalendarConfig.getMostDaysNum() <= 0) {
+            mCalendarData.setMostDaysNum(100);
+        } else {
+            mCalendarData.setMostDaysNum(mCalendarConfig.getMostDaysNum());
         }
 
-        if(dataModel.monthCount <= 0) {
-            dataModel.monthCount = 12;
+        if (mCalendarConfig.getLeastDaysNum() > mCalendarConfig.getMostDaysNum()) {
+            throw new IllegalArgumentException("Illegal config. Min day cannot be more than max");
         }
 
-        if(dataModel.defTag == null) {
-            dataModel.defTag = "label";
+        if(mCalendarConfig.getMonthCount() <= 0) {
+            mCalendarData.setMonthCount(12);
+        } else {
+            mCalendarData.setMonthCount(mCalendarConfig.getMonthCount());
         }
-
-        mLeastDaysNum = dataModel.leastDaysNum;
-        mMostDaysNum = dataModel.mostDaysNum;
-
-        mBusyDays = dataModel.busyDays;
-        mInvalidDays = dataModel.invalidDays;
-        rangeDays = dataModel.selectedDays;
-        mTags = dataModel.tags;
-        mDefTag = dataModel.defTag;
 
         return mCalendarData;
     }
