@@ -554,6 +554,10 @@ public class MonthView extends View {
     }
 
     private boolean isInInvalidRange(CalendarDay calendarDay) {
+        if(mDataModel.getInvalidDays() == null) {
+            return false;
+        }
+
         boolean isInInvalidRange =
                 calendarDay.after(mDataModel.getInvalidDays().getFirst()) &&
                         calendarDay.before(mDataModel.getInvalidDays().getLast());

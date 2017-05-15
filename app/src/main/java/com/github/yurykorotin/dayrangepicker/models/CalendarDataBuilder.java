@@ -14,16 +14,25 @@ public class CalendarDataBuilder {
     private final CalendarData mCalendarData;
 
     private DaySelection<CalendarDay> mInvalidDaySelection;
-    private List<DaySelection<CalendarDay>> mBusyDaySelections;
+    private List<DaySelection<CalendarDay>> mBusyDaySelections = new ArrayList<>();
 
     public CalendarDataBuilder() {
         mCalendar = Calendar.getInstance();
 
         mCalendarData = new CalendarData();
+
+        DaySelection selectedRange = new DaySelection();
+        selectedRange.setFirst(new CalendarDay());
+        selectedRange.setLast(new CalendarDay());
+
+        mCalendarData.setRangeDays(selectedRange);
     }
 
     public CalendarDataBuilder setCalendarConfig(CalendarConfig calendarConfig) {
         mCalendarConfig = calendarConfig;
+
+        setBusyDaySelections(calendarConfig.getBusyDays());
+        setInvalidDaySelection(calendarConfig.getInvalidDays());
 
         return this;
     }
@@ -40,8 +49,30 @@ public class CalendarDataBuilder {
         return this;
     }
 
-    public void setBusyDaySelections(List<DaySelection<CalendarDay>> busyDaySelections) {
+    public CalendarDataBuilder setInvalidDaySelection(DaySelection<CalendarDay> daySelection) {
+        if (daySelection == null) {
+            return this;
+        }
+
+        daySelection.setType(DaySelection.DISABLED_TYPE);
+
+        mInvalidDaySelection = daySelection;
+
+        return this;
+    }
+
+
+    public CalendarDataBuilder setBusyDaySelections(List<DaySelection<CalendarDay>> busyDaySelections) {
+        if (busyDaySelections == null) {
+            return this;
+        }
+        for (DaySelection daySelection : busyDaySelections) {
+            daySelection.setType(DaySelection.BUSY_TYPE);
+        }
+
         mBusyDaySelections = busyDaySelections;
+
+        return this;
     }
 
     public CalendarData build() {

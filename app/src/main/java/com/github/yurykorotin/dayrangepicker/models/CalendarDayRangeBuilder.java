@@ -22,9 +22,13 @@ public class CalendarDayRangeBuilder {
     }
 
     public List<CalendarDay> build() {
+        List<CalendarDay> rangeDays = new ArrayList<>();
+
+        if (mDaySelection == null) {
+            return rangeDays;
+        }
         @CalendarDay.DayType int dayType = getDayType();
 
-        List<CalendarDay> rangeDays = new ArrayList<>();
         CalendarDay firstDay = mDaySelection.getFirst();
         CalendarDay lastDay = mDaySelection.getLast();
         rangeDays.add(firstDay);

@@ -13,8 +13,8 @@ public class StartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_start);
 
         CalendarConfig dataModel = new CalendarConfig();
-        dataModel.leastDaysNum = 2;
-        dataModel.mostDaysNum = 100;
+        dataModel.setLeastDaysNum(2);
+        dataModel.setMostDaysNum(100);
 
         TabbedDayRangePicker dayRangePicker = (TabbedDayRangePicker) findViewById(R.id.calendar);
 

@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
 import com.github.yurykorotin.dayrangepicker.R;
+import com.github.yurykorotin.dayrangepicker.models.CalendarDataBuilder;
 import com.github.yurykorotin.dayrangepicker.models.CalendarDay;
 import com.github.yurykorotin.dayrangepicker.models.DaySelection;
 import com.github.yurykorotin.dayrangepicker.models.CalendarConfig;
@@ -38,10 +39,10 @@ public class DayRangeSelectionView extends RecyclerView {
 
         switch (mSelectionMode) {
             case FIRST_DATE_SELECTION_MODE:
-                mDataModel.selectedDays.setFirst(null);
+                mDataModel.getSelectedDays().setFirst(null);
                 break;
             case LAST_DATE_SELECTION_MODE:
-                mDataModel.selectedDays.setLast(null);
+                mDataModel.getSelectedDays().setLast(null);
         }
 
         if (mAdapter != null) {
@@ -102,7 +103,13 @@ public class DayRangeSelectionView extends RecyclerView {
 
     protected void setUpAdapter() {
         if (mAdapter == null) {
-            mAdapter = new CalendarAdapter(getContext(), typedArray, mController, mDataModel);
+            CalendarDataBuilder builder = new CalendarDataBuilder();
+            builder.setCalendarConfig(mDataModel);
+            mAdapter = new CalendarAdapter(
+                    getContext(),
+                    typedArray,
+                    mController,
+                    builder.build());
             setAdapter(mAdapter);
         }
         mAdapter.notifyDataSetChanged();
@@ -126,7 +133,7 @@ public class DayRangeSelectionView extends RecyclerView {
         mDataModel = dataModel;
         mController = controller;
         setUpAdapter();
-        scrollToSelectedPosition(mDataModel.selectedDays, mDataModel.monthStart);
+        scrollToSelectedPosition(mDataModel.getSelectedDays(), mDataModel.getMonthStart());
         scrollToCurrentMonth();
     }
 
@@ -146,10 +153,12 @@ public class DayRangeSelectionView extends RecyclerView {
 
         int position = 0;
         int totalMonthCount = 12;
-        if (year == mDataModel.yearStart) {
-            position = month - mDataModel.monthStart;
+        if (year == mDataModel.getYearStart()) {
+            position = month - mDataModel.getMonthStart();
         } else {
-            position = totalMonthCount - mDataModel.monthStart + month;
+            position = totalMonthCount -
+                    mDataModel.getMonthStart()
+                    + month;
         }
 
         scrollToPosition(position);
