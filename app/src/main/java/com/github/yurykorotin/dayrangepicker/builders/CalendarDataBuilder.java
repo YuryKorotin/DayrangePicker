@@ -1,4 +1,9 @@
-package com.github.yurykorotin.dayrangepicker.models;
+package com.github.yurykorotin.dayrangepicker.builders;
+
+import com.github.yurykorotin.dayrangepicker.models.CalendarConfig;
+import com.github.yurykorotin.dayrangepicker.models.CalendarData;
+import com.github.yurykorotin.dayrangepicker.models.CalendarDay;
+import com.github.yurykorotin.dayrangepicker.models.DaySelection;
 
 import java.util.ArrayList;
 import java.util.Calendar;

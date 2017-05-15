@@ -1,0 +1,20 @@
+{
+  "first_day_title" :"Дата заезда",
+  "last_day_title":"Дата отъезда",
+  "least_days_num": 2,
+  "most_days_num": 100,
+  "invalid_days": {
+    "range": {
+      "first": "2016-09-19 14:31",
+      "last": "2016-09-19 14:31"
+    },
+    "list": []
+  },
+  "busy_days": {
+    "ranges": [{
+      "first": "2016-09-19 14:31",
+      "last": "2016-09-19 14:31"
+    }],
+    "list": []
+  }
+}

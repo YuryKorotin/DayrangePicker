@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
 import com.github.yurykorotin.dayrangepicker.R;
-import com.github.yurykorotin.dayrangepicker.models.CalendarDataBuilder;
+import com.github.yurykorotin.dayrangepicker.builders.CalendarDataBuilder;
 import com.github.yurykorotin.dayrangepicker.models.CalendarDay;
 import com.github.yurykorotin.dayrangepicker.models.DaySelection;
 import com.github.yurykorotin.dayrangepicker.models.CalendarConfig;
