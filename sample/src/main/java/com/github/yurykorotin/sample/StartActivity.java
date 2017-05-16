@@ -54,8 +54,8 @@ public class StartActivity extends AppCompatActivity {
             Log.e(LOG_TAG,"failed to parsejson");
         }*/
 
-        String startDateString = "05-21-2012 20:00";
-        String endDateString = "05-25-2012 20:00";
+        String startDateString = "05-21-2017 20:00";
+        String endDateString = "05-25-2017 20:00";
 
         CalendarConfigBuilder builder = new CalendarConfigBuilder();
         builder
