@@ -117,7 +117,9 @@ public class CalendarConfigBuilder {
     }
 
     public CalendarConfig build() {
-        mCalendarConfig.setYearStart(mYearStart);
+        if (mYearStart > 0) {
+            mCalendarConfig.setYearStart(mYearStart);
+        }
         mCalendarConfig.setMostDaysNum(mMostDaysNum);
         mCalendarConfig.setLeastDaysNum(mLeastDaysNum);
         mCalendarConfig.setMonthCount(mMonthCount);

@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.github.yurykorotin.dayrangepicker.builders.CalendarConfigBuilder;
 import com.github.yurykorotin.dayrangepicker.models.CalendarConfig;
+import com.github.yurykorotin.dayrangepicker.models.CalendarDay;
 import com.github.yurykorotin.dayrangepicker.views.TabbedDayRangePicker;
 
 import org.json.JSONArray;
@@ -14,6 +15,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class StartActivity extends AppCompatActivity {
@@ -50,18 +54,31 @@ public class StartActivity extends AppCompatActivity {
             Log.e(LOG_TAG,"failed to parsejson");
         }*/
 
-        Date startDate = new Date();
+        String startDateString = "05-21-2012 20:00";
+        String endDateString = "05-25-2012 20:00";
 
         CalendarConfigBuilder builder = new CalendarConfigBuilder();
         builder
                 .setMonthCount(12)
                 .setLeastDaysNum(2)
-                .setMostDaysNum(20);
-                //.setInvalidRange()
-                //.addBusyRange();
+                .setYearStart(Calendar.getInstance().get(Calendar.YEAR))
+                .setMostDaysNum(20)
+                .addBusyRange(parseDate(startDateString), parseDate(endDateString));
 
         CalendarConfig config = builder.build();
 
         mDayRangePicker.setDataModel(config, new TabbedDayRangePicker.DayRangeController(mDayRangePicker));
+    }
+
+    private Date parseDate(String dateString) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy hh:mm");
+        Date convertedDate = new Date();
+        try {
+            convertedDate = dateFormat.parse(dateString);
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return convertedDate;
     }
 }
