@@ -107,6 +107,7 @@ public class CalendarDay implements Serializable, Comparable<CalendarDay> {
         mYear = calendar.get(Calendar.YEAR);
         mMonth = calendar.get(Calendar.MONTH);
         mDay = calendar.get(Calendar.DAY_OF_MONTH);
+        mHourdOfDay = calendar.get(Calendar.HOUR_OF_DAY);
     }
 
     private void setTime(long timeInMillis) {

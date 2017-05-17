@@ -6,7 +6,7 @@
 
         <attr name="selectedDayBackgroundColor" format="color"/>
         <attr name="selectedDayTextColor" format="color"/>
-        <attr name="selectedFirstLastDayTextColor" format="color"/>
+        <attr name="selectedFirstLastDayColor" format="color"/>
 
         <attr name="previousDayTextColor" format="color"/>
         <attr name="normalDayTextColor" format="color" />
