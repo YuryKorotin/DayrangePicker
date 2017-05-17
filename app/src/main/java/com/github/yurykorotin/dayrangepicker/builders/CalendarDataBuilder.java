@@ -96,12 +96,22 @@ public class CalendarDataBuilder {
 
         mCalendarData.setInvalidDayCollection(invalidDays);
 
+        CalendarDay busyDay = null;
+
         for (DaySelection<CalendarDay> daySelection : mBusyDaySelections) {
             busyDays.addAll(dayRangeBuilder
                     .setDaySelection(daySelection)
                     .build());
-            firstLastBusyDays.add(daySelection.getFirst());
-            firstLastBusyDays.add(daySelection.getLast());
+
+            busyDay = daySelection.getFirst();
+            busyDay.setType(CalendarDay.FIRST_BUSY_TYPE);
+
+            firstLastBusyDays.add(busyDay);
+
+            busyDay = daySelection.getLast();
+            busyDay.setType(CalendarDay.LAST_BUSY_TYPE);
+
+            firstLastBusyDays.add(busyDay);
         }
 
         mCalendarData.setFirstLastDayCollection(firstLastBusyDays);

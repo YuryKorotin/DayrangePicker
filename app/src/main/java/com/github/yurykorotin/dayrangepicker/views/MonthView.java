@@ -362,7 +362,7 @@ public class MonthView extends View {
                 canvas.drawText(String.format("%d", day), x, getTextYCenter(mTagTextPaint, y - DAY_SELECTED_RECT_SIZE / 2), mDayTextPaint);
             }
 
-            drawBusyDay(x, y, canvas, day, isSelected, isPrevDay);
+            isSelected = drawBusyDay(x, y, canvas, day, isSelected, isPrevDay);
 
             boolean isInvalidDays = false;
             if (isInInvalidRange(cellCalendar) && !isPrevDay) {
@@ -412,8 +412,15 @@ public class MonthView extends View {
         }
     }
 
-    private void drawBusyDay(int x, int y, Canvas canvas, int day, boolean isSelected, boolean isPrevDay) {
+    private boolean drawBusyDay(int x,
+                                int y,
+                                Canvas canvas,
+                                int day,
+                                boolean isDaySelected,
+                                boolean isPrevDay) {
+        boolean isSelected = isDaySelected;
         if (isBusyDay(cellCalendar) && !isPrevDay) {
+            isSelected = true;
             RectF rectF = new RectF(x - DAY_SELECTED_RECT_SIZE,
                     (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) - DAY_SELECTED_RECT_SIZE,
                     x + DAY_SELECTED_RECT_SIZE, (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) + DAY_SELECTED_RECT_SIZE);
@@ -427,12 +434,10 @@ public class MonthView extends View {
                 if (mStartDate != null && mEndDate == null && mNearestDay != null && cellCalendar.equals(mNearestDay)) {
                     mDayTextPaint.setColor(mDayTextColor);
                 } else if (mDataModel.getFirstLastDayCollection().contains(cellCalendar)) {
-                    drawDayBg(canvas, x, y, mFirstLastBusyDayBgPaint);
-                    canvas.drawRoundRect(rectF, 10.0f, 10.0f, mFirstLastBusyDayBgPaint);
-                    mDayTextPaint.setColor(mBusyDaysTextColor);
+                    drawLastAndFirstBusyDays(x, y, canvas, rectF, cellCalendar);
                 } else {
                     drawDayBg(canvas, x, y, mBusyDayBgPaint);
-                    canvas.drawRoundRect(rectF, 10.0f, 10.0f, mBusyDayBgPaint);
+                    //canvas.drawRect(rectF, mBusyDayBgPaint);
                     mDayTextPaint.setColor(mBusyDaysTextColor);
                 }
 
@@ -444,6 +449,25 @@ public class MonthView extends View {
             }
             canvas.drawText(String.format("%d", day), x, getTextYCenter(mTagTextPaint, y - DAY_SELECTED_RECT_SIZE / 2), mDayTextPaint);
         }
+        return isSelected;
+    }
+
+    private void drawLastAndFirstBusyDays(int x,
+                                          int y,
+                                          Canvas canvas,
+                                          RectF rectF,
+                                          CalendarDay cellCalendar) {
+        List<CalendarDay> daysCollection = mDataModel.getFirstLastDayCollection();
+        int position = daysCollection.indexOf(cellCalendar);
+        CalendarDay extemeDay =  daysCollection.get(position);
+
+        if (extemeDay.getType() == CalendarDay.FIRST_BUSY_TYPE &&
+                extemeDay.isSecondHalfDay()) {
+        }
+
+        drawDayBg(canvas, x, y, mFirstLastBusyDayBgPaint);
+        //canvas.drawRect(rectF, mFirstLastBusyDayBgPaint);
+        mDayTextPaint.setColor(mBusyDaysTextColor);
     }
 
     private void drawToday(boolean isToday, int day, Canvas canvas, int x, int y) {
@@ -516,7 +540,7 @@ public class MonthView extends View {
         mFirstLastBusyDayBgPaint.setColor(mFirstLastSelectedDayColor);
         mFirstLastBusyDayBgPaint.setTextAlign(Paint.Align.CENTER);
         mFirstLastBusyDayBgPaint.setStyle(Paint.Style.FILL);
-        mFirstLastBusyDayBgPaint.setAlpha(SELECTED_CIRCLE_ALPHA);
+        //mFirstLastBusyDayBgPaint.setAlpha(SELECTED_CIRCLE_ALPHA);
 
         mBusyDayBgPaint = new Paint();
         mBusyDayBgPaint.setFakeBoldText(true);
@@ -525,7 +549,7 @@ public class MonthView extends View {
         mBusyDayBgPaint.setTextSize(TAG_TEXT_SIZE);
         mBusyDayBgPaint.setTextAlign(Paint.Align.CENTER);
         mBusyDayBgPaint.setStyle(Paint.Style.FILL);
-        mBusyDayBgPaint.setAlpha(SELECTED_CIRCLE_ALPHA);
+        //mBusyDayBgPaint.setAlpha(SELECTED_CIRCLE_ALPHA);
 
         mInValidDayBgPaint = new Paint();
         mInValidDayBgPaint.setFakeBoldText(true);

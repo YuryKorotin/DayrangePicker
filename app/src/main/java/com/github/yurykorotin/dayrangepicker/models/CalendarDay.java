@@ -26,13 +26,15 @@ public class CalendarDay implements Serializable, Comparable<CalendarDay> {
         mType = type;
     }
 
-    @IntDef({BUSY_TYPE, SELECTED_TYPE, DISABLED_TYPE})
+    @IntDef({BUSY_TYPE, SELECTED_TYPE, DISABLED_TYPE, FIRST_BUSY_TYPE, LAST_BUSY_TYPE})
 
     public @interface DayType{}
 
     public static final int BUSY_TYPE = 0;
     public static final int SELECTED_TYPE = 1;
     public static final int DISABLED_TYPE = 2;
+    public static final int FIRST_BUSY_TYPE = 3;
+    public static final int LAST_BUSY_TYPE = 4;
 
     private int mDay;
     private int mMonth;
