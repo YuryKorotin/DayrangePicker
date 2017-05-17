@@ -15,7 +15,7 @@ public class CalendarConfig implements Serializable {
 
     //TYPE type;
     private int mYearStart = Calendar.getInstance().get(Calendar.YEAR);
-    private int mMonthStart = Calendar.getInstance().get(Calendar.MONTH);
+    private int mMonthStart = -1;
     private int mMonthCount = DEFAULT_MONTH_COUNT;
     private int mLeastDaysNum;
     private int mMostDaysNum;

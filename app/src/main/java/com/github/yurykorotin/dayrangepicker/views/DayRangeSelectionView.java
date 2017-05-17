@@ -152,7 +152,8 @@ public class DayRangeSelectionView extends RecyclerView {
         int year = calendar.get(Calendar.YEAR);
 
         int position = 0;
-        int totalMonthCount = 12;
+        int totalMonthCount = mDataModel.getMonthCount();
+
         if (year == mDataModel.getYearStart()) {
             position = month - mDataModel.getMonthStart();
         } else {
@@ -160,7 +161,6 @@ public class DayRangeSelectionView extends RecyclerView {
                     mDataModel.getMonthStart()
                     + month;
         }
-
         scrollToPosition(position);
     }
 

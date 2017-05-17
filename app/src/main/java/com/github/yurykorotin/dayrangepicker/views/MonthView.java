@@ -23,6 +23,7 @@ import com.github.yurykorotin.dayrangepicker.models.DaySelection;
 import java.security.InvalidParameterException;
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -105,7 +106,7 @@ public class MonthView extends View {
 
     protected int mYear;
     protected int mMonth;
-    final Time today;
+    final Date today;
 
     private final Calendar mCalendar;
     private final Calendar mDayLabelCalendar;
@@ -142,7 +143,7 @@ public class MonthView extends View {
         Resources resources = context.getResources();
         mDayLabelCalendar = Calendar.getInstance();
         mCalendar = Calendar.getInstance();
-        today = new Time();
+        today = Calendar.getInstance().getTime();
         mDayOfWeekTypeface = resources.getString(R.string.sans_serif);
         mMonthTitleTypeface = resources.getString(R.string.sans_serif);
         mCurrentDayTextColor = typedArray.getColor(
@@ -271,13 +272,25 @@ public class MonthView extends View {
         }
     }
 
-    private boolean sameDay(int monthDay, Time time) {
-        return (mYear == time.year) && (mMonth == time.month) && (monthDay == time.monthDay);
+    private boolean sameDay(int monthDay, Date time) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(time);
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        return (mYear == year) && (mMonth == month) && (monthDay == day);
     }
 
-    private boolean prevDay(int monthDay, Time time) {
-        return ((mYear < time.year)) || (mYear == time.year && mMonth < time.month) ||
-                (mYear == time.year && mMonth == time.month && monthDay < time.monthDay);
+    private boolean prevDay(int monthDay, Date time) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(time);
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        return ((mYear < year)) || (mYear == year && mMonth < month) ||
+                (mYear == year && mMonth == month && monthDay < day);
     }
 
     protected void drawMonthCell(Canvas canvas) {

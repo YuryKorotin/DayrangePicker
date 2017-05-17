@@ -119,7 +119,7 @@ public class CalendarDataBuilder {
 
         mCalendarData.setYearStart(mCalendarConfig.getYearStart());
 
-        if (mCalendarConfig.getMonthStart() <= 0) {
+        if (mCalendarConfig.getMonthStart() < 0) {
             mCalendarData.setMonthStart(mCalendar.get(Calendar.MONTH));
         } else {
             mCalendarData.setMonthStart(mCalendarConfig.getMonthStart());
