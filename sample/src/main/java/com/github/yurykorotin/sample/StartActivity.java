@@ -65,6 +65,11 @@ public class StartActivity extends AppCompatActivity {
                 .setMostDaysNum(20)
                 .addBusyRange(parseDate(startDateString), parseDate(endDateString));
 
+        startDateString = "05-28-2017 17:00";
+        endDateString = "05-30-2017 9:00";
+
+        builder.addBusyRange(parseDate(startDateString), parseDate(endDateString));
+
         CalendarConfig config = builder.build();
 
         mDayRangePicker.setDataModel(config, new TabbedDayRangePicker.DayRangeController(mDayRangePicker));

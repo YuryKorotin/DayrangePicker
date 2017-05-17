@@ -3,16 +3,23 @@
     <declare-styleable name="DayPickerView">
         <attr name="currentDayFrameColor" format="color"/>
         <attr name="currentDayTextColor" format="color"/>
+
         <attr name="selectedDayBackgroundColor" format="color"/>
         <attr name="selectedDayTextColor" format="color"/>
+        <attr name="selectedFirstLastDayTextColor" format="color"/>
+
         <attr name="previousDayTextColor" format="color"/>
         <attr name="normalDayTextColor" format="color" />
+
         <attr name="yearMonthTextColor" format="color" />
         <attr name="weekTextColor" format="color" />
+
         <attr name="busyDaysBackgroundColor" format="color" />
-        <attr name="inValidDaysBackgroundColor" format="color" />
         <attr name="busyDaysTextColor" format="color" />
+
         <attr name="inValidDaysTextColor" format="color" />
+        <attr name="inValidDaysBackgroundColor" format="color" />
+
         <attr name="dayTextSize" format="dimension"/>
         <attr name="tagTextSize" format="dimension"/>
         <attr name="yearMonthTextSize" format="dimension" />

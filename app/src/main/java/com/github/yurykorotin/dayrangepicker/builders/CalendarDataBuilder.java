@@ -83,6 +83,7 @@ public class CalendarDataBuilder {
     public CalendarData build() {
         List<CalendarDay> invalidDays = new ArrayList<>();
         List<CalendarDay> busyDays = new ArrayList<>();
+        List<CalendarDay> firstLastBusyDays = new ArrayList<>();
 
         CalendarDayRangeBuilder dayRangeBuilder = new CalendarDayRangeBuilder();
 
@@ -95,12 +96,15 @@ public class CalendarDataBuilder {
 
         mCalendarData.setInvalidDayCollection(invalidDays);
 
-        for (DaySelection daySelection : mBusyDaySelections) {
+        for (DaySelection<CalendarDay> daySelection : mBusyDaySelections) {
             busyDays.addAll(dayRangeBuilder
                     .setDaySelection(daySelection)
                     .build());
+            firstLastBusyDays.add(daySelection.getFirst());
+            firstLastBusyDays.add(daySelection.getLast());
         }
 
+        mCalendarData.setFirstLastDayCollection(firstLastBusyDays);
         mCalendarData.setBusyDayCollection(busyDays);
 
         mCalendarData.setYearStart(mCalendarConfig.getYearStart());

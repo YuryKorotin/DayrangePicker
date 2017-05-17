@@ -11,6 +11,7 @@ import java.util.List;
 public class CalendarData implements Serializable{
     private DaySelection<CalendarDay> mRangeDays;
     private List<CalendarDay> mBusyDayCollection;
+    private List<CalendarDay> mFirstLastDayCollection;
     private List<CalendarDay> mInvalidDayCollection;
     private List<DaySelection<CalendarDay>> mBusyDays;
     private DaySelection<CalendarDay> mInvalidDays;
@@ -110,5 +111,13 @@ public class CalendarData implements Serializable{
 
     public void setInvalidDayCollection(List<CalendarDay> invalidDayCollection) {
         mInvalidDayCollection = invalidDayCollection;
+    }
+
+    public List<CalendarDay> getFirstLastDayCollection() {
+        return mFirstLastDayCollection;
+    }
+
+    public void setFirstLastDayCollection(List<CalendarDay> firstLastDayCollection) {
+        mFirstLastDayCollection = firstLastDayCollection;
     }
 }
