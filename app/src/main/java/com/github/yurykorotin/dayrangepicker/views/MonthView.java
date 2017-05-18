@@ -45,8 +45,6 @@ public class MonthView extends View {
     private static final int SELECTED_CIRCLE_ALPHA = 128;
     protected static int DEFAULT_HEIGHT = 32;
     protected static final int DEFAULT_NUM_ROWS = 6;
-    protected static int DAY_SELECTED_RECT_HALF_WIDTH;
-    protected static int DAY_SELECTED_RECT_HALF_HEIGHT;
     protected static int ROW_SEPARATOR = 12;
     protected static int MINI_DAY_NUMBER_TEXT_SIZE;
     private static int TAG_TEXT_SIZE;
@@ -101,12 +99,16 @@ public class MonthView extends View {
     protected int mNumCells;
     private int mDayOfWeekStart = 0;
     protected Boolean mDrawRect;
+
     protected int mRowHeight = DEFAULT_HEIGHT;
     protected int mWidth;
+    protected int mHeight;
+    protected int mSelectedDayHalfHeight;
+    protected int mSelectedDayHalfWidth;
 
     protected int mYear;
     protected int mMonth;
-    final Date today;
+    final Date mTodayDate;
 
     private final Calendar mCalendar;
     private final Calendar mDayLabelCalendar;
@@ -120,8 +122,7 @@ public class MonthView extends View {
 
     CalendarDay mStartDate;
     CalendarDay mEndDate;
-
-    CalendarDay cellCalendar;
+    CalendarDay mCurrentDay;
 
 /*
     public MonthView(Context context, @Nullable AttributeSet attrs) {
@@ -143,7 +144,7 @@ public class MonthView extends View {
         Resources resources = context.getResources();
         mDayLabelCalendar = Calendar.getInstance();
         mCalendar = Calendar.getInstance();
-        today = Calendar.getInstance().getTime();
+        mTodayDate = mCalendar.getTime();
         mDayOfWeekTypeface = resources.getString(R.string.sans_serif);
         mMonthTitleTypeface = resources.getString(R.string.sans_serif);
         mCurrentDayTextColor = typedArray.getColor(
@@ -207,11 +208,8 @@ public class MonthView extends View {
         MONTH_HEADER_SIZE = typedArray.getDimensionPixelOffset(
                 R.styleable.DayPickerView_headerMonthHeight,
                 resources.getDimensionPixelOffset(R.dimen.header_month_height));
-        DAY_SELECTED_RECT_HALF_WIDTH = typedArray.getDimensionPixelSize(
-                R.styleable.DayPickerView_selectedDaySize,
-                resources.getDimensionPixelOffset(R.dimen.day_x_radius));
 
-        DAY_SELECTED_RECT_HALF_HEIGHT = typedArray.getDimensionPixelSize(
+        mSelectedDayHalfHeight = typedArray.getDimensionPixelSize(
                 R.styleable.DayPickerView_selectedDaySize,
                 resources.getDimensionPixelOffset(R.dimen.day_y_radius));
 
@@ -221,7 +219,7 @@ public class MonthView extends View {
                 resources.getDimensionPixelOffset(R.dimen.calendar_height)) - MONTH_HEADER_SIZE - ROW_SEPARATOR) / 6);
 
         isPrevDayEnabled = typedArray.getBoolean(R.styleable.DayPickerView_enablePreviousDay, false);
-        cellCalendar = new CalendarDay();
+        mCurrentDay = new CalendarDay();
 
         mTopDayPadding = MINI_DAY_NUMBER_TEXT_SIZE / 2;
 
@@ -272,7 +270,7 @@ public class MonthView extends View {
     }
 
     private void onDayClick(CalendarDay calendarDay) {
-        if (mOnDayClickListener != null && (isPrevDayEnabled || !prevDay(calendarDay.getDay(), today))) {
+        if (mOnDayClickListener != null && (isPrevDayEnabled || !prevDay(calendarDay.getDay(), mTodayDate))) {
             mOnDayClickListener.onDayClick(this, calendarDay);
         }
     }
@@ -300,6 +298,10 @@ public class MonthView extends View {
 
     protected void drawMonthCell(Canvas canvas) {
         //int y = MONTH_HEADER_SIZE + ROW_SEPARATOR + mRowHeight / 2;
+        mRowHeight = (int) ((mHeight - MONTH_HEADER_SIZE - ROW_SEPARATOR * 1.2) / mNumRows);
+        mSelectedDayHalfWidth = (mWidth - 2 * mPadding) / (2 * mNumDays) - 2;
+        mSelectedDayHalfHeight = mRowHeight / 2 - 2;
+
         int y = MONTH_HEADER_SIZE + ROW_SEPARATOR + mRowHeight / 2;
         float paddingDay = (mWidth - 2 * mPadding) / (2 * mNumDays);
         int dayOffset = findDayOffset();
@@ -312,14 +314,12 @@ public class MonthView extends View {
             mDayTextPaint.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
             mTagTextPaint.setColor(mDayTextColor);
 
-            cellCalendar.setDay(mYear, mMonth, day);
+            mCurrentDay.setDay(mYear, mMonth, day);
 
             boolean isToday = false;
 
-            drawToday(isToday, day, canvas, x, y);
-
             boolean isPrevDay = false;
-            if (!isPrevDayEnabled && prevDay(day, today)) {
+            if (!isPrevDayEnabled && prevDay(day, mTodayDate)) {
                 isPrevDay = true;
                 mDayTextPaint.setColor(mPreviousDayTextColor);
                 mDayTextPaint.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
@@ -327,33 +327,33 @@ public class MonthView extends View {
             }
 
             boolean isBeginDay = false;
-            if (mStartDate != null && cellCalendar.equals(mStartDate) && !mStartDate.equals(mEndDate)) {
+            if (mStartDate != null && mCurrentDay.equals(mStartDate) && !mStartDate.equals(mEndDate)) {
                 isBeginDay = true;
                 //drawDayBg(canvas, x, y, mSelectedDayBgPaint);
                 drawDayBg(canvas, x, y, mFirstLastSelectedDayBgPaint);
 
                 mDayTextPaint.setColor(mSelectedDayTextColor);
-                //canvas.drawText("start day", x, getTextYCenter(mDayTextPaint, y + DAY_SELECTED_RECT_HALF_WIDTH / 2), mDayTextPaint);
+                //canvas.drawText("start day", x, getTextYCenter(mDayTextPaint, y + mSelectedDayHalfWidth / 2), mDayTextPaint);
                 if (isToday) {
-                    //canvas.drawText(getResources().getString(R.string.today), x, getTextYCenter(mDayTextPaint, y - DAY_SELECTED_RECT_HALF_WIDTH / 2), mDayTextPaint);
+                    //canvas.drawText(getResources().getString(R.string.mTodayDate), x, getTextYCenter(mDayTextPaint, y - mSelectedDayHalfWidth / 2), mDayTextPaint);
                 }
             }
 
             boolean isLastDay = false;
-            if (mEndDate != null && cellCalendar.equals(mEndDate) && !mStartDate.equals(mEndDate)) {
+            if (mEndDate != null && mCurrentDay.equals(mEndDate) && !mStartDate.equals(mEndDate)) {
                 isLastDay = true;
                 //drawDayBg(canvas, x, y, mSelectedDayBgPaint);
                 drawDayBg(canvas, x, y, mFirstLastSelectedDayBgPaint);
 
                 mDayTextPaint.setColor(mSelectedDayTextColor);
-                //canvas.drawText("end day", x, getTextYCenter(mDayTextPaint, y + DAY_SELECTED_RECT_HALF_WIDTH / 2), mDayTextPaint);
+                //canvas.drawText("end day", x, getTextYCenter(mDayTextPaint, y + mSelectedDayHalfWidth / 2), mDayTextPaint);
             }
 
-            if (cellCalendar.after(mStartDate) && cellCalendar.before(mEndDate)) {
+            if (mCurrentDay.after(mStartDate) && mCurrentDay.before(mEndDate)) {
                 mDayTextPaint.setColor(mSelectedDayTextColor);
                 drawDayBg(canvas, x, y, mSelectedDayBgPaint);
                 mTagTextPaint.setColor(Color.WHITE);
-                //canvas.drawText(String.format("%d", day), x, y - DAY_SELECTED_RECT_HALF_WIDTH / 2, mDayTextPaint);
+                //canvas.drawText(String.format("%d", day), x, y - mSelectedDayHalfWidth / 2, mDayTextPaint);
             }
 
             boolean isSelected = false;
@@ -362,43 +362,37 @@ public class MonthView extends View {
 
             isSelected = drawBusyDay(x, y, canvas, day, isSelected, isPrevDay);
 
-            boolean isInvalidDays = false;
-            if (isInInvalidRange(cellCalendar) && !isPrevDay) {
-                isSelected = true;
-//                    RectF rectF = new RectF(x - DAY_SELECTED_RECT_HALF_WIDTH,
-//                            (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) - DAY_SELECTED_RECT_HALF_WIDTH,
-//                            x + DAY_SELECTED_RECT_HALF_WIDTH, (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) + DAY_SELECTED_RECT_HALF_WIDTH);
+            isToday = drawToday(isToday, day, canvas, x, y);
 
+            boolean isInvalidDays = false;
+            if (isInInvalidRange(mCurrentDay) && !isPrevDay) {
+                isSelected = true;
                 if (mStartDate != null &&
                         mEndDate != null &&
                         mNearestDay != null &&
                         mEndDate.equals(mNearestDay) &&
-                        mEndDate.equals(cellCalendar)) {
+                        mEndDate.equals(mCurrentDay)) {
                 } else {
-                    if (mStartDate != null && mEndDate == null && mNearestDay != null && cellCalendar.equals(mNearestDay)) {
+                    if (mStartDate != null && mEndDate == null && mNearestDay != null && mCurrentDay.equals(mNearestDay)) {
                         mDayTextPaint.setColor(mDayTextColor);
                     } else {
                         drawDayBg(canvas, x, y, mInValidDayBgPaint);
-//                            canvas.drawRoundRect(rectF, 10.0f, 10.0f, mBusyDayBgPaint);
                         mDayTextPaint.setColor(mInValidDaysTextColor);
                     }
-                    canvas.drawText("Temp", x, getTextYCenter(mInValidDayBgPaint, y + DAY_SELECTED_RECT_HALF_WIDTH / 2), mDayTextPaint);
+                    canvas.drawText("Temp", x, getTextYCenter(mInValidDayBgPaint, y + mSelectedDayHalfWidth / 2), mDayTextPaint);
                 }
-                canvas.drawText(String.format("%d", day), x, getTextYCenter(mTagTextPaint, y - DAY_SELECTED_RECT_HALF_HEIGHT / 2), mDayTextPaint);
+                canvas.drawText(String.format("%d", day), x, getTextYCenter(mTagTextPaint, y - mSelectedDayHalfHeight / 2), mDayTextPaint);
             }
 
 
             if (mStartDate != null && mEndDate == null && !mStartDate.equals(mEndDate) && !isInvalidDays && !isSelected) {
-                if (cellCalendar.before(mStartDate) || (mNearestDay != null && cellCalendar.after(mNearestDay))) {
-//                    RectF rectF = new RectF(x - DAY_SELECTED_RECT_HALF_WIDTH, (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) - DAY_SELECTED_RECT_HALF_WIDTH,
-//                            x + DAY_SELECTED_RECT_HALF_WIDTH, (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) + DAY_SELECTED_RECT_HALF_WIDTH);
-//                    canvas.drawRoundRect(rectF, 10.0f, 10.0f, mInValidDayBgPaint);
+                if (mCurrentDay.before(mStartDate) || (mNearestDay != null && mCurrentDay.after(mNearestDay))) {
                     drawDayBg(canvas, x, y, mInValidDayBgPaint);
                 }
             }
 
-            if (!isToday && !isPrevDay && !isInvalidDays && !isSelected) {
-                canvas.drawText(String.format("%d", day), x, getTextYCenter(mTagTextPaint, y - DAY_SELECTED_RECT_HALF_HEIGHT / 2), mDayTextPaint);
+            if (!isPrevDay && !isInvalidDays && !isSelected) {
+                canvas.drawText(String.format("%d", day), x, getTextYCenter(mTagTextPaint, y - mSelectedDayHalfHeight / 2), mDayTextPaint);
             }
 
             dayOffset++;
@@ -413,25 +407,25 @@ public class MonthView extends View {
     private boolean drawSelectedDay(int x, int y, Canvas canvas, int day, boolean isDaySelected, boolean isPrevDay) {
         boolean isSelected = isDaySelected;
 
-        if (isSelectedDay(cellCalendar) && !isPrevDay) {
+        if (isSelectedDay(mCurrentDay) && !isPrevDay) {
             isSelected = true;
-            RectF rectF = new RectF(x - DAY_SELECTED_RECT_HALF_WIDTH,
-                    (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) - DAY_SELECTED_RECT_HALF_WIDTH,
-                    x + DAY_SELECTED_RECT_HALF_WIDTH, (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) + DAY_SELECTED_RECT_HALF_HEIGHT);
+            RectF rectF = new RectF(x - mSelectedDayHalfWidth,
+                    (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) - mSelectedDayHalfWidth,
+                    x + mSelectedDayHalfWidth, (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) + mSelectedDayHalfHeight);
 
             if (mStartDate != null && mEndDate != null && mNearestDay != null &&
-                    mEndDate.equals(mNearestDay) && mEndDate.equals(cellCalendar)) {
+                    mEndDate.equals(mNearestDay) && mEndDate.equals(mCurrentDay)) {
 
             } else {
-                if (mStartDate != null && mEndDate == null && mNearestDay != null && cellCalendar.equals(mNearestDay)) {
+                if (mStartDate != null && mEndDate == null && mNearestDay != null && mCurrentDay.equals(mNearestDay)) {
                     mDayTextPaint.setColor(mDayTextColor);
                 } else {
                     //canvas.drawRoundRect(rectF, 10.0f, 10.0f, mSelectedDayBgPaint);
                     mDayTextPaint.setColor(mSelectedDayTextColor);
                 }
 
-                if (cellCalendar.equals(mDataModel.getRangeDays().getLast()) ||
-                        cellCalendar.equals(mDataModel.getRangeDays().getFirst())) {
+                if (mCurrentDay.equals(mDataModel.getRangeDays().getLast()) ||
+                        mCurrentDay.equals(mDataModel.getRangeDays().getFirst())) {
                     drawDayBg(canvas, x, y, mFirstLastSelectedDayBgPaint);
                     //canvas.drawRoundRect(rectF, 10.0f, 10.0f, mSelectedDayBgPaint);
                 } else {
@@ -440,10 +434,10 @@ public class MonthView extends View {
                     /*canvas.drawText(
                             getResources().getString(R.string.busy),
                             x,
-                            getTextYCenter(mSelectedDayBgPaint, y + DAY_SELECTED_RECT_HALF_WIDTH / 2),
+                            getTextYCenter(mSelectedDayBgPaint, y + mSelectedDayHalfWidth / 2),
                             mDayTextPaint);*/
             }
-            canvas.drawText(String.format("%d", day), x, getTextYCenter(mTagTextPaint, y - DAY_SELECTED_RECT_HALF_HEIGHT / 2), mDayTextPaint);
+            canvas.drawText(String.format("%d", day), x, getTextYCenter(mTagTextPaint, y - mSelectedDayHalfHeight / 2), mDayTextPaint);
         }
 
         return isSelected;
@@ -456,22 +450,22 @@ public class MonthView extends View {
                                 boolean isDaySelected,
                                 boolean isPrevDay) {
         boolean isSelected = isDaySelected;
-        if (isBusyDay(cellCalendar) && !isPrevDay) {
+        if (isBusyDay(mCurrentDay) && !isPrevDay) {
             isSelected = true;
-            /*RectF rectF = new RectF(x - DAY_SELECTED_RECT_HALF_WIDTH,
-                    (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) - DAY_SELECTED_RECT_HALF_WIDTH,
-                    x + DAY_SELECTED_RECT_HALF_WIDTH, (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) + DAY_SELECTED_RECT_HALF_WIDTH);*/
+            /*RectF rectF = new RectF(x - mSelectedDayHalfWidth,
+                    (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) - mSelectedDayHalfWidth,
+                    x + mSelectedDayHalfWidth, (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) + mSelectedDayHalfWidth);*/
 
             if (mStartDate != null
                     && mEndDate != null
                     && mNearestDay != null &&
-                    mEndDate.equals(mNearestDay) && mEndDate.equals(cellCalendar)) {
+                    mEndDate.equals(mNearestDay) && mEndDate.equals(mCurrentDay)) {
 
             } else {
-                if (mStartDate != null && mEndDate == null && mNearestDay != null && cellCalendar.equals(mNearestDay)) {
+                if (mStartDate != null && mEndDate == null && mNearestDay != null && mCurrentDay.equals(mNearestDay)) {
                     mDayTextPaint.setColor(mDayTextColor);
-                } else if (mDataModel.getFirstLastDayCollection().contains(cellCalendar)) {
-                    drawLastAndFirstBusyDays(x, y, canvas, cellCalendar);
+                } else if (mDataModel.getFirstLastDayCollection().contains(mCurrentDay)) {
+                    drawLastAndFirstBusyDays(x, y, canvas, mCurrentDay);
                 } else {
                     drawDayBg(canvas, x, y, mBusyDayBgPaint);
                     //canvas.drawRect(rectF, mBusyDayBgPaint);
@@ -481,10 +475,10 @@ public class MonthView extends View {
                     /*canvas.drawText(
                             getResources().getString(R.string.busy),
                             x,
-                            getTextYCenter(mBusyDayBgPaint, y + DAY_SELECTED_RECT_HALF_WIDTH / 2),
+                            getTextYCenter(mBusyDayBgPaint, y + mSelectedDayHalfWidth / 2),
                             mDayTextPaint);*/
             }
-            canvas.drawText(String.format("%d", day), x, getTextYCenter(mTagTextPaint, y - DAY_SELECTED_RECT_HALF_HEIGHT / 2), mDayTextPaint);
+            canvas.drawText(String.format("%d", day), x, getTextYCenter(mTagTextPaint, y - mSelectedDayHalfHeight / 2), mDayTextPaint);
         }
         return isSelected;
     }
@@ -494,8 +488,8 @@ public class MonthView extends View {
                                           Canvas canvas,
                                           CalendarDay cellCalendar) {
 
-        RectF rectF = new RectF(x - DAY_SELECTED_RECT_HALF_WIDTH, y - DAY_SELECTED_RECT_HALF_HEIGHT,
-                x + DAY_SELECTED_RECT_HALF_WIDTH, y + DAY_SELECTED_RECT_HALF_HEIGHT);
+        RectF rectF = new RectF(x - mSelectedDayHalfWidth, y - mSelectedDayHalfHeight,
+                x + mSelectedDayHalfWidth, y + mSelectedDayHalfHeight);
 
         List<CalendarDay> daysCollection = mDataModel.getFirstLastDayCollection();
         int position = daysCollection.indexOf(cellCalendar);
@@ -515,18 +509,21 @@ public class MonthView extends View {
         mDayTextPaint.setColor(mBusyDaysTextColor);
     }
 
-    private void drawToday(boolean isToday, int day, Canvas canvas, int x, int y) {
+    private boolean drawToday(boolean isTodayCurrent, int day, Canvas canvas, int x, int y) {
+        boolean isToday = isTodayCurrent;
         if (mHasToday && (mToday == day)) {
             isToday = true;
             /*canvas.drawText(
-                    getResources().getString(R.string.today),
+                    getResources().getString(R.string.mTodayDate),
                     x,
-                    getTextYCenter(mDayTextPaint, y - DAY_SELECTED_RECT_HALF_WIDTH / 2),
+                    getTextYCenter(mDayTextPaint, y - mSelectedDayHalfWidth / 2),
                     mDayTextPaint);*/
-            RectF todayFrameRect = new RectF(x - DAY_SELECTED_RECT_HALF_WIDTH, y - DAY_SELECTED_RECT_HALF_HEIGHT,
-                    x + DAY_SELECTED_RECT_HALF_WIDTH, y + DAY_SELECTED_RECT_HALF_HEIGHT);
+            RectF todayFrameRect = new RectF(x - mSelectedDayHalfWidth, y - mSelectedDayHalfHeight,
+                    x + mSelectedDayHalfWidth, y + mSelectedDayHalfHeight);
             canvas.drawRect(todayFrameRect, mTodayFramePaint);
         }
+
+        return isToday;
     }
 
     public CalendarDay getDayFromLocation(float x, float y) {
@@ -564,13 +561,6 @@ public class MonthView extends View {
         mWeekTextPaint.setTextAlign(Paint.Align.CENTER);
         mWeekTextPaint.setFakeBoldText(true);
 
-//        mTitleBGPaint = new Paint();
-//        mTitleBGPaint.setFakeBoldText(true);
-//        mTitleBGPaint.setAntiAlias(true);
-//        mTitleBGPaint.setColor(mSelectedDayTextColor);
-//        mTitleBGPaint.setTextAlign(Align.CENTER);
-//        mTitleBGPaint.setStyle(Style.FILL);
-
         mSelectedDayBgPaint = new Paint();
         mSelectedDayBgPaint.setFakeBoldText(true);
         mSelectedDayBgPaint.setAntiAlias(true);
@@ -585,7 +575,6 @@ public class MonthView extends View {
         mFirstLastSelectedDayBgPaint.setColor(mFirstLastSelectedDayColor);
         mFirstLastSelectedDayBgPaint.setTextAlign(Paint.Align.CENTER);
         mFirstLastSelectedDayBgPaint.setStyle(Paint.Style.FILL);
-        //mFirstLastSelectedDayBgPaint.setAlpha(SELECTED_CIRCLE_ALPHA);
 
         mBusyDayBgPaint = new Paint();
         mBusyDayBgPaint.setFakeBoldText(true);
@@ -594,7 +583,6 @@ public class MonthView extends View {
         mBusyDayBgPaint.setTextSize(TAG_TEXT_SIZE);
         mBusyDayBgPaint.setTextAlign(Paint.Align.CENTER);
         mBusyDayBgPaint.setStyle(Paint.Style.FILL);
-        //mBusyDayBgPaint.setAlpha(SELECTED_CIRCLE_ALPHA);
 
         mInValidDayBgPaint = new Paint();
         mInValidDayBgPaint.setFakeBoldText(true);
@@ -604,15 +592,6 @@ public class MonthView extends View {
         mInValidDayBgPaint.setTextAlign(Paint.Align.CENTER);
         mInValidDayBgPaint.setStyle(Paint.Style.FILL);
         mInValidDayBgPaint.setAlpha(SELECTED_CIRCLE_ALPHA);
-
-//        mSelectedDayTextPaint = new Paint();
-//        mSelectedDayTextPaint.setAntiAlias(true);
-//        mSelectedDayTextPaint.setTextSize(MONTH_DAY_LABEL_TEXT_SIZE);
-//        mSelectedDayTextPaint.setColor(Color.WHITE);
-//        mSelectedDayTextPaint.setTypeface(Typeface.create(mDayOfWeekTypeface, Typeface.NORMAL));
-//        mSelectedDayTextPaint.setStyle(Style.FILL);
-//        mSelectedDayTextPaint.setTextAlign(Align.CENTER);
-//        mSelectedDayTextPaint.setFakeBoldText(true);
 
         mDayTextPaint = new Paint();
         mDayTextPaint.setAntiAlias(true);
@@ -653,6 +632,7 @@ public class MonthView extends View {
 
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         mWidth = w;
+        mHeight = h;
     }
 
     public boolean onTouchEvent(MotionEvent event) {
@@ -794,7 +774,7 @@ public class MonthView extends View {
         mNumCells = Utils.getDaysInMonth(mMonth, mYear);
         for (int i = 0; i < mNumCells; i++) {
             final int day = i + 1;
-            if (sameDay(day, today)) {
+            if (sameDay(day, mTodayDate)) {
                 mHasToday = true;
                 mToday = day;
             }
@@ -812,8 +792,8 @@ public class MonthView extends View {
     }
 
     private void drawDayBg(Canvas canvas, int x, int y, Paint paint) {
-        RectF rectF = new RectF(x - DAY_SELECTED_RECT_HALF_WIDTH, y - DAY_SELECTED_RECT_HALF_HEIGHT,
-                x + DAY_SELECTED_RECT_HALF_WIDTH, y + DAY_SELECTED_RECT_HALF_HEIGHT);
+        RectF rectF = new RectF(x - mSelectedDayHalfWidth, y - mSelectedDayHalfHeight,
+                x + mSelectedDayHalfWidth, y + mSelectedDayHalfHeight);
         canvas.drawRect(rectF, paint);
     }
 

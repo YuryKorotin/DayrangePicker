@@ -8,6 +8,7 @@
     tools:context="com.github.yurykorotin.sample.StartActivity">
 
     <com.github.yurykorotin.dayrangepicker.views.TabbedDayRangePicker
+        android:padding="8dp"
         android:id="@+id/calendar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
