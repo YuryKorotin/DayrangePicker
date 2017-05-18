@@ -27,7 +27,7 @@
         app:yearMonthTextSize="16sp"
         app:weekTextSize="12sp"
         app:headerMonthHeight="58dp"
-        app:calendarViewHeight="320dp"
+        app:calendarViewHeight="338dp"
         app:firstDayTitle="@string/first_title"
         app:lastDayTitle="@string/last_title"
         app:enablePreviousDay="false"/>

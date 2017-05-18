@@ -214,9 +214,11 @@ public class MonthView extends View {
                 resources.getDimensionPixelOffset(R.dimen.day_y_radius));
 
 
-        mRowHeight = ((typedArray.getDimensionPixelSize(
-                R.styleable.DayPickerView_calendarViewHeight,
-                resources.getDimensionPixelOffset(R.dimen.calendar_height)) - MONTH_HEADER_SIZE - ROW_SEPARATOR) / 6);
+        mRowHeight = ((typedArray.getDimensionPixelSize(R.styleable.DayPickerView_calendarViewHeight,
+                resources.getDimensionPixelOffset(R.dimen.calendar_height)) -
+                MONTH_HEADER_SIZE -
+                ROW_SEPARATOR) / 6 -
+        resources.getDimensionPixelOffset(R.dimen.row_padding));
 
         isPrevDayEnabled = typedArray.getBoolean(R.styleable.DayPickerView_enablePreviousDay, false);
         mCurrentDay = new CalendarDay();
@@ -237,7 +239,7 @@ public class MonthView extends View {
 
 
     private void drawMonthDayLabels(Canvas canvas) {
-        int y = MONTH_HEADER_SIZE - (WEEK_TEXT_SIZE / 2);
+        int y = MONTH_HEADER_SIZE - WEEK_TEXT_SIZE / 2;
         int dayWidthHalf = (mWidth - mPadding * 2) / (mNumDays * 2);
 
         for (int i = 0; i < mNumDays; i++) {
@@ -298,9 +300,9 @@ public class MonthView extends View {
 
     protected void drawMonthCell(Canvas canvas) {
         //int y = MONTH_HEADER_SIZE + ROW_SEPARATOR + mRowHeight / 2;
-        mRowHeight = (int) ((mHeight - MONTH_HEADER_SIZE - ROW_SEPARATOR * 1.2) / mNumRows);
-        mSelectedDayHalfWidth = (mWidth - 2 * mPadding) / (2 * mNumDays) - 2;
-        mSelectedDayHalfHeight = mRowHeight / 2 - 2;
+        mRowHeight = (int) ((mHeight - MONTH_HEADER_SIZE - ROW_SEPARATOR) / mNumRows);
+        mSelectedDayHalfWidth = (mWidth - 2 * mPadding) / (2 * mNumDays);
+        //mSelectedDayHalfHeight = mRowHeight / 2 - 2;
 
         int y = MONTH_HEADER_SIZE + ROW_SEPARATOR + mRowHeight / 2;
         float paddingDay = (mWidth - 2 * mPadding) / (2 * mNumDays);
@@ -452,9 +454,6 @@ public class MonthView extends View {
         boolean isSelected = isDaySelected;
         if (isBusyDay(mCurrentDay) && !isPrevDay) {
             isSelected = true;
-            /*RectF rectF = new RectF(x - mSelectedDayHalfWidth,
-                    (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) - mSelectedDayHalfWidth,
-                    x + mSelectedDayHalfWidth, (y - MINI_DAY_NUMBER_TEXT_SIZE / 3) + mSelectedDayHalfWidth);*/
 
             if (mStartDate != null
                     && mEndDate != null
