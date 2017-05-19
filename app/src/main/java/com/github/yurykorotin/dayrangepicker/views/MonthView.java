@@ -381,7 +381,7 @@ public class MonthView extends View {
                         drawDayBg(canvas, x, y, mInValidDayBgPaint);
                         mDayTextPaint.setColor(mInValidDaysTextColor);
                     }
-                    canvas.drawText("Temp", x, getTextYCenter(mInValidDayBgPaint, y + mSelectedDayHalfWidth / 2), mDayTextPaint);
+                    canvas.drawText("Invalid", x, getTextYCenter(mInValidDayBgPaint, y + mSelectedDayHalfWidth / 2), mDayTextPaint);
                 }
                 canvas.drawText(String.format("%d", day), x, getTextYCenter(mTagTextPaint, y - mSelectedDayHalfHeight / 2), mDayTextPaint);
             }
@@ -433,11 +433,6 @@ public class MonthView extends View {
                 } else {
                     drawDayBg(canvas, x, y, mSelectedDayBgPaint);
                 }
-                    /*canvas.drawText(
-                            getResources().getString(R.string.busy),
-                            x,
-                            getTextYCenter(mSelectedDayBgPaint, y + mSelectedDayHalfWidth / 2),
-                            mDayTextPaint);*/
             }
             canvas.drawText(String.format("%d", day), x, getTextYCenter(mTagTextPaint, y - mSelectedDayHalfHeight / 2), mDayTextPaint);
         }
@@ -470,12 +465,6 @@ public class MonthView extends View {
                     //canvas.drawRect(rectF, mBusyDayBgPaint);
                     mDayTextPaint.setColor(mBusyDaysTextColor);
                 }
-
-                    /*canvas.drawText(
-                            getResources().getString(R.string.busy),
-                            x,
-                            getTextYCenter(mBusyDayBgPaint, y + mSelectedDayHalfWidth / 2),
-                            mDayTextPaint);*/
             }
             canvas.drawText(String.format("%d", day), x, getTextYCenter(mTagTextPaint, y - mSelectedDayHalfHeight / 2), mDayTextPaint);
         }
@@ -512,11 +501,6 @@ public class MonthView extends View {
         boolean isToday = isTodayCurrent;
         if (mHasToday && (mToday == day)) {
             isToday = true;
-            /*canvas.drawText(
-                    getResources().getString(R.string.mTodayDate),
-                    x,
-                    getTextYCenter(mDayTextPaint, y - mSelectedDayHalfWidth / 2),
-                    mDayTextPaint);*/
             RectF todayFrameRect = new RectF(x - mSelectedDayHalfWidth, y - mSelectedDayHalfHeight,
                     x + mSelectedDayHalfWidth, y + mSelectedDayHalfHeight);
             canvas.drawRect(todayFrameRect, mTodayFramePaint);
