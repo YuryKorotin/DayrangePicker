@@ -75,6 +75,9 @@ public class CalendarConfig implements Serializable {
     }
 
     public DaySelection<CalendarDay> getSelectedDays() {
+        if (mSelectedDays == null) {
+            mSelectedDays = new DaySelection<>();
+        }
         return mSelectedDays;
     }
 

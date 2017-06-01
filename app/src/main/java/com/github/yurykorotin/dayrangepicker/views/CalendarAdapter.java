@@ -7,10 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 
+import com.github.yurykorotin.dayrangepicker.controllers.DayRangePickerController;
 import com.github.yurykorotin.dayrangepicker.models.CalendarData;
 import com.github.yurykorotin.dayrangepicker.models.CalendarDay;
 import com.github.yurykorotin.dayrangepicker.models.DaySelection;
-import com.github.yurykorotin.dayrangepicker.models.CalendarConfig;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,9 +36,9 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     private CalendarData mDataModel;
 
     public CalendarAdapter(Context context,
-                              TypedArray typedArray,
-                              DayRangePickerController datePickerController,
-                              CalendarData dataModel) {
+                           TypedArray typedArray,
+                           DayRangePickerController datePickerController,
+                           CalendarData dataModel) {
         mContext = context;
         mCalendar = Calendar.getInstance();
         mTypedArray = typedArray;
@@ -114,6 +114,9 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
      * @param calendarDay
      */
     protected void onDayTapped(CalendarDay calendarDay) {
+        if (mDataModel != null && mDataModel.getSelectionMode() == CalendarData.DISABLED_SELECTION_MODE) {
+            return;
+        }
         if(mController != null) {
             mController.onDayOfMonthSelected(calendarDay);
         }
@@ -127,63 +130,92 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
     public void setRangeSelectedDay(CalendarDay calendarDay) {
         DaySelection<CalendarDay> rangeDays = mDataModel.getRangeDays();
 
-        CalendarDay firstRangeDay= rangeDays.getFirst();
+        CalendarDay firstRangeDay = rangeDays.getFirst();
         CalendarDay lastRangeDay = rangeDays.getLast();
 
-        if (firstRangeDay != null && lastRangeDay == null) {
+        boolean isFirstDaySelected = firstRangeDay != null && lastRangeDay == null;
+
+
+        if (isFirstDaySelected ||
+                mDataModel.getSelectionMode() == CalendarData.LAST_DATE_SELECTION_MODE) {
             mNearestDay = getNearestDay(firstRangeDay);
-            if (isContainSpecialDays(firstRangeDay, calendarDay, mDataModel.getBusyDayCollection())) {
-                if(mController != null) {
-                    mController.alertSelectedFail(DayRangePickerController.FailEven.CONTAIN_NO_SELECTED);
-                }
-                return;
-            }
-            if (isContainSpecialDays(firstRangeDay, calendarDay, mDataModel.getInvalidDayCollection())) {
-                if(mController != null) {
-                    mController.alertSelectedFail(DayRangePickerController.FailEven.CONTAIN_INVALID);
-                }
-                return;
-            }
-            if (calendarDay.getDate().before(firstRangeDay.getDate())) {
-                if(mController != null) {
-                    mController.alertSelectedFail(DayRangePickerController.FailEven.END_MT_START);
-                }
+
+            if (!isRangesCorrect(firstRangeDay, calendarDay)) {
                 return;
             }
 
-            int dayDiff = dateDiff(firstRangeDay, calendarDay);
-            if (dayDiff > 1 && mDataModel.getLeastDaysNum() > dayDiff) {
-                if(mController != null) {
-                    mController.alertSelectedFail(DayRangePickerController.FailEven.NO_REACH_LEAST_DAYS);
-                }
-                return;
-            }
-            if (dayDiff > 1 && mDataModel.getMostDaysNum() < dayDiff) {
-                if(mController != null) {
-                    mController.alertSelectedFail(DayRangePickerController.FailEven.NO_REACH_MOST_DAYS);
-                }
-                return;
-            }
-
-            rangeDays.setLast(calendarDay);
+            mDataModel.getRangeDays().setLast(calendarDay);
 
             if(mController != null) {
-                mController.onDateRangeSelected(mDataModel.getRangeDays());
+                mController.onDateRangeSelected(rangeDays);
                 mController.onEndDaySelected(calendarDay);
             }
-        } else if (rangeDays.getLast() != null) {
-            rangeDays.setFirst(calendarDay);
-            rangeDays.setLast(null);
+        } else if (rangeDays.getLast() != null &&
+                mDataModel.getSelectionMode() == CalendarData.FIRST_DATE_SELECTION_MODE) {
+            if (!isRangesCorrect(calendarDay, rangeDays.getLast())) {
+                return;
+            }
+
+            mDataModel.getRangeDays().setFirst(calendarDay);
             mNearestDay = getNearestDay(calendarDay);
-            mController.onStartDaySelected(calendarDay);
+            if(mController != null) {
+                mController.onDateRangeSelected(rangeDays);
+            }
+
         } else {
-            rangeDays.setFirst(calendarDay);
+            mDataModel.getRangeDays().setFirst(calendarDay);
             mController.onStartDaySelected(calendarDay);
             mNearestDay = getNearestDay(calendarDay);
         }
 
         notifyDataSetChanged();
     }
+
+    private boolean isRangesCorrect(CalendarDay firstRangeDay, CalendarDay calendarDay) {
+        if (isContainSpecialDays(firstRangeDay, calendarDay, mDataModel.getBusyDayCollection())) {
+            if(mController != null) {
+                mController.alertSelectedFail(DayRangePickerController.FailEven.CONTAIN_NO_BUSY);
+            }
+            return false;
+        }
+        if (isContainSpecialDays(firstRangeDay, calendarDay, mDataModel.getInvalidDayCollection())) {
+            if(mController != null) {
+                mController.alertSelectedFail(DayRangePickerController.FailEven.CONTAIN_INVALID);
+            }
+            return false;
+        }
+        if (calendarDay.getDate().before(firstRangeDay.getDate()) ||
+                calendarDay.getDate().equals(firstRangeDay.getDate())) {
+            if(mController != null) {
+                mController.alertSelectedFail(DayRangePickerController.FailEven.END_MT_START);
+            }
+            return false;
+        }
+
+        int dayDiff = dateDiff(firstRangeDay, calendarDay);
+        if (dayDiff > 1 && mDataModel.getLeastDaysNum() > dayDiff) {
+            if(mController != null) {
+                mController.alertSelectedFail(DayRangePickerController.FailEven.NO_REACH_LEAST_DAYS);
+            }
+            return false;
+        }
+        if (dayDiff > 1 && mDataModel.getMostDaysNum() < dayDiff) {
+            if(mController != null) {
+                mController.alertSelectedFail(DayRangePickerController.FailEven.NO_REACH_MOST_DAYS);
+            }
+            return false;
+        }
+        return true;
+    }
+
+    public void setSelectionMode(@CalendarData.SelectionMode int selectionMode) {
+        if(mDataModel == null) {
+            return;
+        }
+
+        mDataModel.setSelectionMode(selectionMode);
+    }
+
 
     /**
      *
@@ -194,7 +226,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         List<CalendarDay> list = new ArrayList<>();
         list.addAll(mDataModel.getBusyDayCollection());
         list.addAll(mDataModel.getInvalidDayCollection());
-        //Collections.sort(list);
+        Collections.sort(list);
         for (CalendarDay day : list) {
             if (calendarDay.compareTo(day) < 0) {
                 return day;

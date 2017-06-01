@@ -6,7 +6,8 @@
 
         <attr name="selectedDayBackgroundColor" format="color"/>
         <attr name="selectedDayTextColor" format="color"/>
-        <attr name="selectedFirstLastDayColor" format="color"/>
+        <attr name="selectedFirstLastDayBackColor" format="color"/>
+        <attr name="selectedFirstLastDayTextColor" format="color"/>
 
         <attr name="previousDayTextColor" format="color"/>
         <attr name="normalDayTextColor" format="color" />
@@ -29,15 +30,18 @@
         <attr name="calendarViewHeight" format="dimension" />
         <attr name="enablePreviousDay" format="boolean" />
         <attr name="todayBorderColor" format="color"/>
+        <attr name="isSelectable" format="boolean"/>
     </declare-styleable>
 
     <!-- TODO Add reference to tab style-->
     <declare-styleable name="TabbedDayRangePicker">
+        <attr name="isTabEnabled" format="boolean"/>
         <attr name="startYear" format="integer"/>
         <attr name="startMonth" format="integer"/>
         <attr name="monthCount" format="integer"/>
         <attr name="firstDayTitle" format="string"/>
         <attr name="lastDayTitle" format="string"/>
+        <attr name="title" format="string"/>
         <attr name="tabSwitchEnabled" format="boolean"/>
         <attr name="tabStripColor" format="color"/>
     </declare-styleable>

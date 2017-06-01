@@ -19,6 +19,8 @@ public class CalendarDataBuilder {
     private final CalendarData mCalendarData;
 
     private DaySelection<CalendarDay> mInvalidDaySelection;
+    private DaySelection<CalendarDay> mSelectedRange;
+
     private List<DaySelection<CalendarDay>> mBusyDaySelections = new ArrayList<>();
 
     public CalendarDataBuilder() {
@@ -38,6 +40,7 @@ public class CalendarDataBuilder {
 
         setBusyDaySelections(calendarConfig.getBusyDays());
         setInvalidDaySelection(calendarConfig.getInvalidDays());
+        setRangeSelected(calendarConfig.getSelectedDays());
 
         return this;
     }
@@ -80,6 +83,16 @@ public class CalendarDataBuilder {
         return this;
     }
 
+    public CalendarDataBuilder setRangeSelected(DaySelection<CalendarDay> selectedRange) {
+        if (selectedRange == null) {
+            return this;
+        }
+
+        mSelectedRange = selectedRange;
+
+        return this;
+    }
+
     public CalendarData build() {
         List<CalendarDay> invalidDays = new ArrayList<>();
         List<CalendarDay> busyDays = new ArrayList<>();
@@ -116,6 +129,7 @@ public class CalendarDataBuilder {
 
         mCalendarData.setFirstLastDayCollection(firstLastBusyDays);
         mCalendarData.setBusyDayCollection(busyDays);
+        mCalendarData.setRangeDays(mSelectedRange);
 
         mCalendarData.setYearStart(mCalendarConfig.getYearStart());
 

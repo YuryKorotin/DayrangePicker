@@ -72,7 +72,7 @@ public class StartActivity extends AppCompatActivity {
 
         CalendarConfig config = builder.build();
 
-        mDayRangePicker.setDataModel(config, new TabbedDayRangePicker.DayRangeController(mDayRangePicker));
+        mDayRangePicker.setDataModel(config, new TabbedDayRangePicker.DayRangeController());
     }
 
     private Date parseDate(String dateString) {

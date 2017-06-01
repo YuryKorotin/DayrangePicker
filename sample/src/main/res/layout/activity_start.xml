@@ -16,7 +16,7 @@
         app:previousDayTextColor="@color/inactive_textColor"
         app:busyDaysBackgroundColor="@android:color/holo_red_light"
         app:selectedDayBackgroundColor="@android:color/holo_green_light"
-        app:selectedFirstLastDayColor="@android:color/holo_green_dark"
+        app:selectedFirstLastDayBackColor="@android:color/holo_green_dark"
 
         app:yearMonthTextColor="@color/weekAndYearTextColor"
         app:weekTextColor="@color/weekAndYearTextColor"

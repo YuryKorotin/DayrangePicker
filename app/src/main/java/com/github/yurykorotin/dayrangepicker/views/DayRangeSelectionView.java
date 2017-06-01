@@ -9,9 +9,11 @@ import android.util.AttributeSet;
 
 import com.github.yurykorotin.dayrangepicker.R;
 import com.github.yurykorotin.dayrangepicker.builders.CalendarDataBuilder;
+import com.github.yurykorotin.dayrangepicker.controllers.DayRangePickerController;
+import com.github.yurykorotin.dayrangepicker.models.CalendarConfig;
+import com.github.yurykorotin.dayrangepicker.models.CalendarData;
 import com.github.yurykorotin.dayrangepicker.models.CalendarDay;
 import com.github.yurykorotin.dayrangepicker.models.DaySelection;
-import com.github.yurykorotin.dayrangepicker.models.CalendarConfig;
 
 import java.util.Calendar;
 
@@ -23,7 +25,7 @@ public class DayRangeSelectionView extends RecyclerView {
     protected Context mContext;
     protected CalendarAdapter mAdapter;
     private DayRangePickerController mController;
-    private @SelectionMode int mSelectionMode;
+    private @SelectionMode int mSelectionMode = COMMON_SELECTION_MODE;
 
     public @SelectionMode int getSelectionMode() {
         return mSelectionMode;
@@ -37,25 +39,38 @@ public class DayRangeSelectionView extends RecyclerView {
 
     private void notifyModeChange() {
 
+        if (mAdapter == null) {
+            return;
+        }
+
         switch (mSelectionMode) {
             case FIRST_DATE_SELECTION_MODE:
-                mDataModel.getSelectedDays().setFirst(null);
+                mAdapter.setSelectionMode(CalendarData.FIRST_DATE_SELECTION_MODE);
                 break;
             case LAST_DATE_SELECTION_MODE:
-                mDataModel.getSelectedDays().setLast(null);
+                mAdapter.setSelectionMode(CalendarData.LAST_DATE_SELECTION_MODE);
+                break;
+            case DISABLED_SELECTION_MODE:
+                mAdapter.setSelectionMode(CalendarData.DISABLED_SELECTION_MODE);
+                break;
+            default:
+                mAdapter.setSelectionMode(CalendarData.COMMON_SELECTION_MODE);
         }
 
-        if (mAdapter != null) {
-            mAdapter.notifyDataSetChanged();
-        }
+        mAdapter.notifyDataSetChanged();
     }
 
-    @IntDef({FIRST_DATE_SELECTION_MODE, LAST_DATE_SELECTION_MODE})
+    @IntDef({FIRST_DATE_SELECTION_MODE,
+            LAST_DATE_SELECTION_MODE,
+            COMMON_SELECTION_MODE,
+            DISABLED_SELECTION_MODE})
 
     public @interface SelectionMode{}
 
     public static final int FIRST_DATE_SELECTION_MODE = 0;
     public static final int LAST_DATE_SELECTION_MODE = 1;
+    public static final int COMMON_SELECTION_MODE = 2;
+    public static final int DISABLED_SELECTION_MODE = 3;
 
     protected int mCurrentScrollState = 0;
     protected long mPreviousScrollPosition;
@@ -63,7 +78,6 @@ public class DayRangeSelectionView extends RecyclerView {
 
     private TypedArray typedArray;
     private OnScrollListener onScrollListener;
-
     private CalendarConfig mDataModel;
 
     public DayRangeSelectionView(Context context) {
@@ -139,7 +153,8 @@ public class DayRangeSelectionView extends RecyclerView {
 
     private void scrollToSelectedPosition(DaySelection<CalendarDay> selectedDays,
                                           int monthStart) {
-        if (selectedDays != null && selectedDays.getFirst() != null &&
+        if (selectedDays != null &&
+                selectedDays.getFirst() != null &&
                 selectedDays.getFirst().getMonth() > monthStart) {
             int position = selectedDays.getFirst().getMonth() - monthStart;
             scrollToPosition(position);

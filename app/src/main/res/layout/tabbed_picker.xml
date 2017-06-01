@@ -6,15 +6,44 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tabs"
-        app:tabTextAppearance="@style/DayTabTextAppearance"
+    <RelativeLayout
+        android:id="@+id/header_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:tabGravity="fill"
-        app:tabMode="fixed"/>
+        android:layout_height="60dp">
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            app:tabTextAppearance="@style/DayTabTextAppearance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            app:tabPaddingStart="-1dp"
+            app:tabPaddingEnd="-1dp"
+            app:tabGravity="fill"
+            app:tabMode="fixed"/>
+
+        <TextView
+            android:id="@+id/title_textview"
+            android:textSize="20sp"
+            android:layout_marginLeft="24dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <FrameLayout
+            android:id="@+id/header_divider"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:background="@color/divider"
+            android:layout_height="1dp"/>
+
+    </RelativeLayout>
 
     <com.github.yurykorotin.dayrangepicker.views.DayRangeSelectionView
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
         android:id="@+id/day_range_selection_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

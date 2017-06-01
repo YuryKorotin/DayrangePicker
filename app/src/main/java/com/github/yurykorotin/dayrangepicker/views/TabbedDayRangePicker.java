@@ -9,12 +9,16 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.github.yurykorotin.dayrangepicker.R;
 import com.github.yurykorotin.dayrangepicker.Utils;
-import com.github.yurykorotin.dayrangepicker.models.CalendarDay;
+import com.github.yurykorotin.dayrangepicker.controllers.DayRangePickerController;
+import com.github.yurykorotin.dayrangepicker.controllers.DayRangeTabController;
 import com.github.yurykorotin.dayrangepicker.models.CalendarConfig;
+import com.github.yurykorotin.dayrangepicker.models.CalendarDay;
 import com.github.yurykorotin.dayrangepicker.models.DaySelection;
 
 import java.util.List;
@@ -23,53 +27,81 @@ import java.util.List;
  * Created by yuri on 03.05.17.
  */
 
-public class TabbedDayRangePicker extends LinearLayout implements OnDaySelectionListener{
+public class TabbedDayRangePicker extends LinearLayout{
     private DayRangeSelectionView mDayRangeSelectionView;
+    private TextView mTitleTextView;
+    private FrameLayout mHeaderDivider;
     private TabLayout mTabLayout;
     private TabLayout.Tab mFirstDayTab;
     private TabLayout.Tab mLastDayTab;
+
     private TypedArray mTabbedAttributesArray;
     private TypedArray mCalendarAttributesArray;
     private Context mContext;
 
-    @Override
-    public void onStartDaySelected(CalendarDay calendarDay) {
-        if (mLastDayTab != null) {
-            mLastDayTab.select();
-        }
-    }
+    private boolean mIsTabEnabled = true;
+    private DayRangeTabController mTabController;
 
-    @Override
-    public void onEndDaySelected(CalendarDay calendarDay) {
+    public void setTabEnabled(boolean tabEnabled) {
+        mIsTabEnabled = tabEnabled;
+
+        setupTitle();
     }
 
     public static class DayRangeController extends DayRangePickerController {
+        public void setTabController(DayRangeTabController tabController) {
+            mTabController = tabController;
+        }
+
+        private DayRangeTabController mTabController;
+        private OnSelectionFailedListener mOnSelectionFailedListener;
+
         public DayRangeController() {
 
         }
 
-        public DayRangeController(OnDaySelectionListener onDaySelectionListener) {
-            super(onDaySelectionListener);
+        @Override
+        public void onDayOfMonthSelected(CalendarDay calendarDay) {
         }
 
         @Override
-        protected void onDayOfMonthSelected(CalendarDay calendarDay) {
-        }
-
-        @Override
-        protected void onDateRangeSelected(DaySelection<CalendarDay> selectedDays) {
-        }
-
-        @Override
-        protected void onDaysSelected(List<CalendarDay> selectedDaysList) {
+        public void onDaysSelected(List<CalendarDay> selectedDaysList) {
 
         }
 
         @Override
-        protected void alertSelectedFail(DayRangePickerController.FailEven even) {
+        public void alertSelectedFail(DayRangePickerController.FailEven even) {
+            if (mOnSelectionFailedListener == null) {
+                return;
+            }
+            if (even.equals(FailEven.NO_REACH_LEAST_DAYS)) {
+                mOnSelectionFailedListener.onMinimalPeriodExceed();
+            }
+
+            if (even.equals(FailEven.CONTAIN_NO_BUSY)) {
+                mOnSelectionFailedListener.onBusyDaysIntersection();
+            }
+        }
+
+        public void onStartDaySelected(CalendarDay calendarDay) {
+            super.onStartDaySelected(calendarDay);
+            if (mTabController != null) {
+                mTabController.onLastTabSelected();
+            }
+        }
+
+        public void onEndDaySelected(CalendarDay calendarDay) {
+            super.onEndDaySelected(calendarDay);
+        }
+
+        public void onDateRangeSelected(DaySelection<CalendarDay> selectedDays) {
+            super.onDateRangeSelected(selectedDays);
+        }
+
+        public void setOnSelectionFailedListener(OnSelectionFailedListener onSelectionFailedListener) {
+            mOnSelectionFailedListener = onSelectionFailedListener;
         }
     }
-
 
     public TabbedDayRangePicker(Context context) {
         super(context);
@@ -77,10 +109,15 @@ public class TabbedDayRangePicker extends LinearLayout implements OnDaySelection
         init(context);
     }
 
-    public void setDataModel(CalendarConfig dataModel, DayRangePickerController controller) {
-        if (mDayRangeSelectionView != null) {
-            mDayRangeSelectionView.setParameter(dataModel, controller);
+    public void setDataModel(CalendarConfig dataModel, DayRangeController controller) {
+        if (mDayRangeSelectionView == null) {
+            return;
         }
+        mTabController = new DayRangeTabController(mFirstDayTab, mLastDayTab);
+
+        controller.setTabController(mTabController);
+
+        mDayRangeSelectionView.setParameter(dataModel, controller);
     }
 
     public TabbedDayRangePicker(Context context, @Nullable AttributeSet attrs) {
@@ -95,6 +132,26 @@ public class TabbedDayRangePicker extends LinearLayout implements OnDaySelection
         setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
         init(context);
+    }
+
+    public void setFirstDaySelection() {
+        if (mDayRangeSelectionView != null) {
+            mDayRangeSelectionView.setSelectionMode(DayRangeSelectionView.FIRST_DATE_SELECTION_MODE);
+            mTabController.onFirstTabSelected();
+        }
+    }
+
+    public void setLastDaySelection() {
+        if (mDayRangeSelectionView != null) {
+            mDayRangeSelectionView.setSelectionMode(DayRangeSelectionView.LAST_DATE_SELECTION_MODE);
+            mTabController.onLastTabSelected();
+        }
+    }
+
+    public void disableDaySelection() {
+        if (mDayRangeSelectionView != null) {
+            mDayRangeSelectionView.setSelectionMode(DayRangeSelectionView.DISABLED_SELECTION_MODE);
+        }
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -112,6 +169,39 @@ public class TabbedDayRangePicker extends LinearLayout implements OnDaySelection
         dataModel.setMostDaysNum(100);
 
         setupTabs();
+
+        mTitleTextView = (TextView) findViewById(R.id.title_textview);
+        mHeaderDivider = (FrameLayout) findViewById(R.id.header_divider);
+
+        boolean isSelectable = mCalendarAttributesArray.getBoolean(
+                R.styleable.DayPickerView_isSelectable,
+                true);
+
+        if (!isSelectable) {
+            disableDaySelection();
+        }
+
+        mIsTabEnabled = mTabbedAttributesArray.getBoolean(
+                R.styleable.TabbedDayRangePicker_isTabEnabled,
+                true);
+
+        setupTitle();
+    }
+
+    private void setupTitle() {
+        if (mIsTabEnabled) {
+            mTabLayout.setVisibility(VISIBLE);
+            mTitleTextView.setVisibility(INVISIBLE);
+            mHeaderDivider.setVisibility(GONE);
+        } else {
+            mTabLayout.setVisibility(INVISIBLE);
+            mTitleTextView.setVisibility(VISIBLE);
+            mHeaderDivider.setVisibility(VISIBLE);
+        }
+
+        String title = mTabbedAttributesArray.getString(R.styleable.TabbedDayRangePicker_title);
+
+        mTitleTextView.setText(title);
     }
 
     private void setupTabs() {

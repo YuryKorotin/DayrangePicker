@@ -1,7 +1,8 @@
 package com.github.yurykorotin.dayrangepicker.models;
 
+import android.support.annotation.IntDef;
+
 import java.io.Serializable;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -9,13 +10,38 @@ import java.util.List;
  */
 
 public class CalendarData implements Serializable{
+    private @SelectionMode
+    int mSelectionMode = COMMON_SELECTION_MODE;
+
+    public @SelectionMode
+    int getSelectionMode() {
+        return mSelectionMode;
+    }
+
+    public void setSelectionMode(@SelectionMode int selectionMode) {
+        mSelectionMode = selectionMode;
+    }
+
+    @IntDef({FIRST_DATE_SELECTION_MODE,
+            LAST_DATE_SELECTION_MODE,
+            COMMON_SELECTION_MODE,
+            DISABLED_SELECTION_MODE})
+
+    public @interface SelectionMode{}
+
+    public static final int FIRST_DATE_SELECTION_MODE = 0;
+    public static final int LAST_DATE_SELECTION_MODE = 1;
+    public static final int COMMON_SELECTION_MODE = 2;
+    public static final int DISABLED_SELECTION_MODE = 3;
+
     private DaySelection<CalendarDay> mRangeDays;
     private List<CalendarDay> mBusyDayCollection;
-    private List<CalendarDay> mFirstLastDayCollection;
+    private List<CalendarDay>  mFirstLastDayCollection;
     private List<CalendarDay> mInvalidDayCollection;
     private List<DaySelection<CalendarDay>> mBusyDays;
     private DaySelection<CalendarDay> mInvalidDays;
     private DaySelection<CalendarDay> mTags;
+
     private int mLeastDaysNum;
     private int mMostDaysNum;
     private int mYearStart;
